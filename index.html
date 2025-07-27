@@ -191,7 +191,22 @@
       margin-bottom: 1rem;
       color: var(--primary);
     }
+
+    .card p {
+      text-align: justify; /* Agregado */
+      margin-bottom: 0.5rem; /* Agregado para espacio entre párrafos en cards */
+    }
     
+    /* Industry Applications (now using .card styles) */
+    /* No specific styles needed for .industry-grid as it now uses .card-grid */
+    /* Removed .industry-card, .industry-icon, .industry-stat as they are no longer used */
+    
+    /* About Section */
+    .about-text { /* Nueva clase */
+      text-align: justify;
+      margin-bottom: 1.5rem;
+    }
+
     /* Skills Section */
     .skills-section {
       margin-bottom: 3rem;
@@ -221,6 +236,7 @@
       text-align: center;
       transition: all 0.3s ease;
       border: 1px solid rgba(0, 147, 201, 0.2);
+      cursor: pointer; /* Agregado para indicar que es clickeable */
     }
 
     .skill-chip:hover {
@@ -228,6 +244,60 @@
       color: white;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 147, 201, 0.2);
+    }
+
+    /* Skill Modal Styles */
+    .skill-modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      top: 0;
+      left: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
+      z-index: 2000; /* Sit on top */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border-top: 4px solid var(--primary); /* Estilo distintivo */
+    }
+    
+    .modal-title {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    
+    .modal-example {
+      background-color: rgba(0, 147, 201, 0.05); /* Fondo suave */
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 3px solid var(--primary); /* Borde para destacar */
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: var(--transition);
+    }
+    
+    .close-modal:hover {
+      color: var(--primary);
+      transform: rotate(90deg);
     }
     
     /* Responsive Adjustments */
@@ -248,12 +318,15 @@
       .skills-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       }
+      
+      /* .industry-grid was removed in favor of .card-grid for consistency */
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <a href="#oferta">Servicios</a>
+    <a href="#industrias">Industrias</a>
     <a href="#skills">Skills</a>
     <a class="active" href="#contacto">Contacto</a>
   </nav>
@@ -279,138 +352,168 @@
     <div class="card-grid">
       <div class="card" id="riesgo">
         <h3>Modelado de riesgo</h3>
-        <p>Desarrollo modelos estadísticos y de machine learning para estimar probabilidades de default en instrumentos de deuda y crédito corporativo.</p>
+        <p>Desarrollo modelos estadísticos y de machine learning para estimar probabilidades de default en instrumentos de deuda y crédito corporativo. Utilizo técnicas avanzadas como survival analysis, gradient boosting y redes neuronales para capturar relaciones no lineales en datos financieros.</p>
       </div>
       
       <div class="card" id="trading">
         <h3>Trading algorítmico</h3>
-        <p>Construyo sistemas de decisión automatizada usando señales técnicas, análisis de series temporales y backtesting con datos reales.</p>
+        <p>Construyo sistemas de decisión automatizada usando señales técnicas, análisis de series temporales y backtesting con datos reales. Implemento estrategias basadas en machine learning, procesamiento de lenguaje natural y análisis de microestructura de mercados.</p>
       </div>
       
       <div class="card" id="portafolios">
         <h3>Optimización de carteras</h3>
-        <p>Aplico técnicas como optimización convexa y métodos evolutivos para estructurar carteras eficientes bajo restricciones reales.</p>
+        <p>Aplico técnicas como optimización convexa y métodos evolutivos para estructurar carteras eficientes bajo restricciones reales. Desarrollo modelos que consideran correlaciones dinámicas, restricciones regulatorias y costos de transacción para maximizar el ratio de Sharpe.</p>
       </div>
       
       <div class="card" id="nlp">
         <h3>Procesamiento de lenguaje</h3>
-        <p>Uso NLP y transformers para extraer señales económicas desde texto no estructurado como noticias y reportes.</p>
+        <p>Uso NLP y transformers para extraer señales económicas desde texto no estructurado como noticias y reportes. Implemento modelos de sentiment analysis específicos para el dominio financiero y sistemas de pregunta-respuesta sobre documentos corporativos.</p>
       </div>
       
       <div class="card" id="anomalías">
         <h3>Detección de anomalías</h3>
-        <p>Algoritmos para identificar comportamientos atípicos en flujos de datos financieros con técnicas avanzadas.</p>
+        <p>Algoritmos para identificar comportamientos atípicos en flujos de datos financieros con técnicas avanzadas. Combino métodos estadísticos tradicionales con autoencoders y GANs para detectar fraudes, errores de datos y oportunidades de arbitraje.</p>
       </div>
       
       <div class="card" id="stress">
         <h3>Simulación de escenarios</h3>
-        <p>Simulo condiciones adversas para portafolios utilizando Monte Carlo, redes bayesianas y modelos generativos.</p>
+        <p>Simulo condiciones adversas para portafolios utilizando Monte Carlo, redes bayesianas y modelos generativos. Desarrollo stress tests personalizados que incorporan shocks macroeconómicos, eventos de cola y correlaciones extremas entre activos.</p>
       </div>
     </div>
   </section>
 
-  <section id="sobre-mi" class="section" style="background: #f8f9fa;">
+  <section id="industrias" class="section" style="background: #f8f9fa;">
+    <h2 class="section-title">Aplicaciones a Otras Industrias</h2>
+    <p style="max-width: 700px; margin: 0 auto 2rem; text-align: center;">
+      Nuestros modelos financieros adaptados generan eficiencias disruptivas en diversos sectores:
+    </p>
+    
+    <div class="card-grid"> <div class="card"> <h3>Salud</h3>
+        <p>Diagnósticos automatizados mediante modelos predictivos adaptados de análisis de riesgo crediticio, identificando patrones complejos en imágenes médicas y datos clínicos. Lectura automatizada de exámenes médicos usando algoritmos de reconocimiento de patrones financieros reconvertidos para análisis de imágenes DICOM. Sugerencias de insights clínicos basados en análisis de correlaciones no lineales entre variables de salud.</p>
+      </div>
+      
+      <div class="card"> <h3>Logística</h3>
+        <p>Ruteo inteligente basado en teoría de portafolios eficientes, optimizando flotas de transporte como si fueran activos financieros. Modelos predictivos de demanda adaptados de series temporales financieras para gestión de inventarios. Sistemas de asignación dinámica inspirados en algoritmos de trading de alta frecuencia.</p>
+      </div>
+      
+      <div class="card"> <h3>Energía</h3>
+        <p>Predicción de precios spot con redes neuronales temporales adaptadas de modelos de forecasting financiero. Optimización de generación/distribución mediante modelos estocásticos de procesos de difusión. Sistemas de trading algorítmico aplicado a mercados de energía y commodities.</p>
+      </div>
+      
+      <div class="card"> <h3>Retail</h3>
+        <p>Sistemas de recomendación con embeddings financieros reconvertidos para análisis de comportamiento de compra. Pronóstico de demanda usando series temporales multivariadas y modelos de factorización de matrices. Optimización de precios mediante algoritmos de market making adaptados al comercio minorista.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre-mi" class="section">
     <div style="max-width: 700px; margin: 0 auto;">
       <h2 class="section-title">Sobre Mí</h2>
-      <p style="margin-bottom: 1.5rem;">
-        Soy <strong>experto en Mercado de Capitales, Finanzas y Economía</strong>, con especialización en <strong>Ciencia de Datos Aplicada e Inteligencia Artificial</strong>.
-        Mi trabajo se sitúa en la intersección entre teoría económica, tecnología cuantitativa y automatización inteligente.
+      <p class="about-text"> Soy <strong>experto en Mercado de Capitales, Finanzas y Economía</strong>, con especialización en <strong>Ciencia de Datos Aplicada e Inteligencia Artificial</strong>. Mi trabajo se sitúa en la intersección entre teoría económica, tecnología cuantitativa y automatización inteligente.
       </p>
-      <p>
-        Combino herramientas tradicionales de análisis financiero con técnicas avanzadas de IA: desde <em>machine learning</em> supervisado, hasta modelos probabilísticos bayesianos, <em>deep learning</em> y reflexiones estratégicas sobre la evolución hacia la AGI (Artificial General Intelligence).
+      <p class="about-text"> Combino herramientas tradicionales de análisis financiero con técnicas avanzadas de IA: desde <em>machine learning</em> supervisado, hasta modelos probabilísticos bayesianos, <em>deep learning</em> y reflexiones estratégicas sobre la evolución hacia la AGI (Artificial General Intelligence). Mis modelos se caracterizan por su robustez matemática y capacidad de adaptación a entornos dinámicos, siempre con un enfoque en la generación de valor tangible y resultados accionables.
       </p>
     </div>
   </section>
 
-  <section id="skills" class="section">
+  <section id="skills" class="section" style="background: #f8f9fa;">
     <h2 class="section-title">Skills Técnicas</h2>
     
     <div class="skills-section">
       <h3 class="skill-category">Mercado de Capitales</h3>
       <div class="skills-grid">
-        <span class="skill-chip">Análisis Fundamental</span>
-        <span class="skill-chip">Valuación de Activos</span>
-        <span class="skill-chip">Asset Allocation</span>
-        <span class="skill-chip">Mercados de Deuda</span>
-        <span class="skill-chip">Capital Markets</span>
-        <span class="skill-chip">IPO Advisory</span>
-        <span class="skill-chip">Private Equity</span>
-        <span class="skill-chip">M&A Analysis</span>
+        <span class="skill-chip" data-skill="Análisis Fundamental">Análisis Fundamental</span>
+        <span class="skill-chip" data-skill="Valuación de Activos">Valuación de Activos</span>
+        <span class="skill-chip" data-skill="Asset Allocation">Asset Allocation</span>
+        <span class="skill-chip" data-skill="Pricing de Derivados">Pricing de Derivados</span>
+        <span class="skill-chip" data-skill="Trading de Derivados">Trading de Derivados</span>
       </div>
     </div>
     
     <div class="skills-section">
       <h3 class="skill-category">Derivados & Trading</h3>
       <div class="skills-grid">
-        <span class="skill-chip">Options Pricing</span>
-        <span class="skill-chip">Volatility Arbitrage</span>
-        <span class="skill-chip">Exotic Derivatives</span>
-        <span class="skill-chip">Algorithmic Trading</span>
-        <span class="skill-chip">Quant Strategies</span>
-        <span class="skill-chip">HFT Systems</span>
-        <span class="skill-chip">Risk Neutral Valuation</span>
-        <span class="skill-chip">Stochastic Calculus</span>
+        <span class="skill-chip" data-skill="Options Pricing">Options Pricing</span>
+        <span class="skill-chip" data-skill="Volatility Arbitrage">Volatility Arbitrage</span>
+        <span class="skill-chip" data-skill="Exotic Derivatives">Exotic Derivatives</span>
+        <span class="skill-chip" data-skill="Algorithmic Trading">Algorithmic Trading</span>
+        <span class="skill-chip" data-skill="Quant Strategies">Quant Strategies</span>
+        <span class="skill-chip" data-skill="HFT Systems">HFT Systems</span>
+        <span class="skill-chip" data-skill="Risk Neutral Valuation">Risk Neutral Valuation</span>
+        <span class="skill-chip" data-skill="Stochastic Calculus">Stochastic Calculus</span>
       </div>
     </div>
     
     <div class="skills-section">
       <h3 class="skill-category">Inteligencia Artificial</h3>
       <div class="skills-grid">
-        <span class="skill-chip">Deep Learning</span>
-        <span class="skill-chip">Reinforcement Learning</span>
-        <span class="skill-chip">Generative Models</span>
-        <span class="skill-chip">Time Series Forecasting</span>
-        <span class="skill-chip">Anomaly Detection</span>
-        <span class="skill-chip">Computer Vision</span>
-        <span class="skill-chip">Bayesian Networks</span>
-        <span class="skill-chip">Explainable AI</span>
+        <span class="skill-chip" data-skill="Deep Learning">Deep Learning</span>
+        <span class="skill-chip" data-skill="Reinforcement Learning">Reinforcement Learning</span>
+        <span class="skill-chip" data-skill="Generative Models">Generative Models</span>
+        <span class="skill-chip" data-skill="Time Series Forecasting">Time Series Forecasting</span>
+        <span class="skill-chip" data-skill="Anomaly Detection">Anomaly Detection</span>
+        <span class="skill-chip" data-skill="Computer Vision">Computer Vision</span>
+        <span class="skill-chip" data-skill="Bayesian Networks">Bayesian Networks</span>
+        <span class="skill-chip" data-skill="Explainable AI">Explainable AI</span>
       </div>
     </div>
     
     <div class="skills-section">
       <h3 class="skill-category">LLMs & NLP</h3>
       <div class="skills-grid">
-        <span class="skill-chip">Transformer Architectures</span>
-        <span class="skill-chip">Fine-tuning LLMs</span>
-        <span class="skill-chip">Financial Sentiment Analysis</span>
-        <span class="skill-chip">Prompt Engineering</span>
-        <span class="skill-chip">RAG Systems</span>
-        <span class="skill-chip">Earnings Call Analysis</span>
-        <span class="skill-chip">Document Intelligence</span>
-        <span class="skill-chip">Multimodal AI</span>
+        <span class="skill-chip" data-skill="Transformer Architectures">Transformer Architectures</span>
+        <span class="skill-chip" data-skill="Fine-tuning LLMs">Fine-tuning LLMs</span>
+        <span class="skill-chip" data-skill="Financial Sentiment Analysis">Financial Sentiment Analysis</span>
+        <span class="skill-chip" data-skill="Prompt Engineering">Prompt Engineering</span>
+        <span class="skill-chip" data-skill="RAG Systems">RAG Systems</span>
+        <span class="skill-chip" data-skill="Earnings Call Analysis">Earnings Call Analysis</span>
+        <span class="skill-chip" data-skill="Document Intelligence">Document Intelligence</span>
+        <span class="skill-chip" data-skill="Multimodal AI">Multimodal AI</span>
       </div>
     </div>
     
     <div class="skills-section">
       <h3 class="skill-category">Finanzas Cuantitativas</h3>
       <div class="skills-grid">
-        <span class="skill-chip">Portfolio Optimization</span>
-        <span class="skill-chip">Monte Carlo Methods</span>
-        <span class="skill-chip">Risk Metrics (VaR/CVaR)</span>
-        <span class="skill-chip">Factor Models</span>
-        <span class="skill-chip">Stochastic Volatility</span>
-        <span class="skill-chip">Fixed Income Modeling</span>
-        <span class="skill-chip">Credit Risk Modeling</span>
-        <span class="skill-chip">Market Microstructure</span>
+        <span class="skill-chip" data-skill="Portfolio Optimization">Portfolio Optimization</span>
+        <span class="skill-chip" data-skill="Monte Carlo Methods">Monte Carlo Methods</span>
+        <span class="skill-chip" data-skill="Risk Metrics (VaR/CVaR)">Risk Metrics (VaR/CVaR)</span>
+        <span class="skill-chip" data-skill="Factor Models">Factor Models</span>
+        <span class="skill-chip" data-skill="Stochastic Volatility">Stochastic Volatility</span>
+        <span class="skill-chip" data-skill="Fixed Income Modeling">Fixed Income Modeling</span>
+        <span class="skill-chip" data-skill="Credit Risk Modeling">Credit Risk Modeling</span>
+        <span class="skill-chip" data-skill="Market Microstructure">Market Microstructure</span>
       </div>
     </div>
     
     <div class="skills-section">
       <h3 class="skill-category">Economía</h3>
       <div class="skills-grid">
-        <span class="skill-chip">Macro-Financial Models</span>
-        <span class="skill-chip">Behavioral Economics</span>
-        <span class="skill-chip">Game Theory</span>
-        <span class="skill-chip">Monetary Policy</span>
-        <span class="skill-chip">Econometrics</span>
-        <span class="skill-chip">DSGE Modeling</span>
-        <span class="skill-chip">Causal Inference</span>
-        <span class="skill-chip">Network Theory</span>
+        <span class="skill-chip" data-skill="Macro-Financial Models">Macro-Financial Models</span>
+        <span class="skill-chip" data-skill="Behavioral Economics">Behavioral Economics</span>
+        <span class="skill-chip" data-skill="Game Theory">Game Theory</span>
+        <span class="skill-chip" data-skill="Monetary Policy">Monetary Policy</span>
+        <span class="skill-chip" data-skill="Econometrics">Econometrics</span>
+        <span class="skill-chip" data-skill="DSGE Modeling">DSGE Modeling</span>
+        <span class="skill-chip" data-skill="Causal Inference">Causal Inference</span>
+        <span class="skill-chip" data-skill="Network Theory">Network Theory</span>
       </div>
     </div>
   </section>
 
-  <section id="contacto" class="section" style="background: #f8f9fa;">
+  <div class="skill-modal" id="skillModal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h3 class="modal-title" id="modalSkillTitle">Skill Title</h3>
+      <div id="modalSkillDescription"></div>
+      <div class="modal-example">
+        <strong>Ejemplo aplicado:</strong>
+        <p id="modalSkillExample"></p>
+      </div>
+    </div>
+  </div>
+
+  <section id="contacto" class="section">
     <div style="max-width: 600px; margin: 0 auto;">
       <h2 class="section-title">Contáctame</h2>
       <form action="https://formspree.io/f/manbokpo" id="contact-form" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -438,6 +541,189 @@
   </section>
 
   <script>
+    const skillData = {
+      "Análisis Fundamental": {
+        description: "Evaluación integral de empresas mediante el análisis de estados financieros, modelo de negocio, ventajas competitivas y entorno macroeconómico. Incluye modelos DCF (Discounted Cash Flow), análisis de múltiplos y evaluación cualitativa de la gestión corporativa.",
+        example: "Valuación de empresa tecnológica mediante DCF con tres escenarios (base, optimista, pesimista), análisis de múltiplos comparables (EV/EBITDA, P/E) y evaluación del pipeline de productos en desarrollo."
+      },
+      "Valuación de Activos": {
+        description: "Metodologías para determinar el valor intrínseco de activos financieros, incluyendo modelos de flujos descontados, valoración relativa, opciones reales y modelos híbridos. Considera el perfil de riesgo, horizonte temporal y condiciones de mercado.",
+        example: "Valuación de startup usando método de opciones reales (Black-Scholes adaptado) para capturar el valor de flexibilidad estratégica en su plan de expansión internacional."
+      },
+      "Asset Allocation": {
+        description: "Proceso de distribución óptima de capital entre diferentes clases de activos (acciones, bonos, alternativos) considerando objetivos de inversión, horizonte temporal y tolerancia al riesgo. Utiliza optimización media-varianza, Black-Litterman y otros enfoques avanzados.",
+        example: "Optimización de cartera para fondo de pensiones que maximiza retorno esperado para un nivel dado de riesgo (CVaR), incorporando views de gestores mediante modelo Black-Litterman."
+      },
+      "Pricing de Derivados": {
+        description: "Modelado matemático para determinar precios teóricos de instrumentos derivados (opciones, futuros, swaps) usando métodos analíticos (Black-Scholes), numéricos (árboles binomiales) y de simulación (Monte Carlo). Considera volatilidad, tasas de interés y dividendos.",
+        example: "Implementación de modelo Heston para pricing de opciones europeas con volatilidad estocástica, calibrado con superficie de volatilidad implícita del mercado."
+      },
+      "Trading de Derivados": {
+        description: "Desarrollo e implementación de estrategias que utilizan derivados financieros para posicionamiento direccional, cobertura de riesgo o arbitraje. Incluye spreads, estrategias de volatilidad y trading de correlación.",
+        example: "Estrategia de dispersion trading que capitaliza diferencias entre volatilidad implícita de índice y volatilidad realizada de sus componentes, con cobertura delta-neutral."
+      },
+      "Options Pricing": {
+        description: "Modelos matemáticos para valuar opciones financieras, considerando precio del subyacente, strike, tiempo hasta vencimiento, tasas de interés, dividendos y volatilidad. Incluye modelos Black-Scholes-Merton, binomial y de volatilidad local.",
+        example: "Modelo binomial americano para valuar opciones sobre acciones que pagan dividendos discretos, con 1000 pasos temporales para precisión."
+      },
+      "Volatility Arbitrage": {
+        description: "Estrategias que buscan aprovechar discrepancias entre volatilidad implícita (derivados) y volatilidad realizada (histórica). Incluye trading de spreads de volatilidad, variance swaps y gamma scalping.",
+        example: "Implementación de estrategia short straddle con cobertura dinámica cuando volatilidad implícita excede significativamente la realizada histórica."
+      },
+      "Exotic Derivatives": {
+        description: "Valuación y trading de derivados con características no estándar (barrier options, Asian options, lookbacks, etc.). Requiere métodos numéricos avanzados y comprensión profunda de payoff estructurado.",
+        example: "Pricing de opción barrera up-and-out usando diferencias finitas con condiciones de frontera específicas y ajuste por discrecionalidad de observación."
+      },
+      "Algorithmic Trading": {
+        description: "Desarrollo de sistemas automatizados que ejecutan órdenes basadas en reglas predefinidas, minimizando costos de transacción e impacto de mercado. Incluye VWAP, TWAP, implementation shortfall y estrategias predictivas.",
+        example: "Algoritmo de execution que divide orden grande en submódenes usando perfil de liquidez intraday y modelo de impacto de mercado propagado."
+      },
+      "Quant Strategies": {
+        description: "Estrategias sistemáticas basadas en modelos cuantitativos, incluyendo mean reversion, momentum, factor investing y machine learning. Backtesting riguroso y optimización de parámetros.",
+        example: "Estrategia long-short basada en factor quality (ROE, leverage, earnings stability) con neutralización sectorial y control de exposición a otros factores de riesgo."
+      },
+      "HFT Systems": {
+        description: "Sistemas de trading de alta frecuencia que operan en escalas de milisegundos a microsegundos. Requiere infraestructura de baja latencia, co-location y algoritmos de market making o arbitraje estadístico.",
+        example: "Market maker electrónico para ETFs que ajusta spreads bid-ask en tiempo real basado en volatilidad implícita y depth del libro de órdenes."
+      },
+      "Risk Neutral Valuation": {
+        description: "Marco teórico para valuar derivados asumiendo un mundo neutral al riesgo, donde el rendimiento esperado de todos los activos es la tasa libre de riesgo. Fundamental para pricing de derivados.",
+        example: "Valuación de swaption usando medida forward-neutral y modelo de tasa corta de Hull-White en contexto de expectativas de Fed policy."
+      },
+      "Stochastic Calculus": {
+        description: "Herramientas matemáticas para modelar procesos aleatorios en tiempo continuo, esenciales para derivados y finanzas cuantitativas. Incluye movimiento browniano, cálculo de Itô y ecuaciones diferenciales estocásticas.",
+        example: "Derivación de proceso de precio para opción asiática usando lema de Itô y cambio de medida para valuación neutral al riesgo."
+      },
+      "Deep Learning": {
+        description: "Redes neuronales con múltiples capas para modelar relaciones complejas en datos financieros. Incluye arquitecturas como MLPs, CNNs para datos estructurados y secuenciales, con técnicas de regularización avanzadas.",
+        example: "Red neuronal profunda para predecir retornos anómalos basada en 150 factores macroeconómicos y de mercado, con dropout y batch normalization."
+      },
+      "Reinforcement Learning": {
+        description: "Algoritmos que aprenden políticas óptimas mediante interacción con entorno financiero simulado. Aplicaciones en trading algorítmico, optimización de ejecución y gestión de portafolios.",
+        example: "Agente RL para gestión de cartera que aprende estrategia óptica de asignación de activos mediante Q-learning con función de recompensa basada en ratio de Sharpe."
+      },
+      "Generative Models": {
+        description: "Modelos que aprenden distribución de datos financieros para generar muestras realistas (GANs, VAEs, Diffusion Models). Usados en data augmentation, stress testing y simulación de escenarios.",
+        example: "GAN condicional que genera trayectorias realistas de precios de commodities para stress testing de carteras con exposición a materias primas."
+      },
+      "Time Series Forecasting": {
+        description: "Modelado predictivo de series temporales financieras usando ARIMA, GARCH, redes neuronales recurrentes y transformers. Considera estacionalidad, tendencias y shocks externos.",
+        example: "Modelo Transformer para predecir retornos de acciones usando datos históricos y embeddings de noticias financieras, con atención cross-modal a eventos económicos relevantes."
+      },
+      "Anomaly Detection": {
+        description: "Algoritmos para identificar comportamientos atípicos en flujos de datos financieros. Combina métodos estadísticos, basados en distancia (LOF), reconstrucción (autoencoders) y densidad (Isolation Forest).",
+        example: "Detección de fraude en transacciones bancarias utilizando un autoencoder variacional para aprender la distribución normal y señalar desviaciones significativas."
+      },
+      "Computer Vision": {
+        description: "Aplicación de técnicas de visión por computadora para analizar datos visuales en finanzas, como gráficos de precios, documentos escaneados o identificación biométrica para seguridad.",
+        example: "Análisis de patrones en gráficos de velas (candlestick patterns) utilizando redes neuronales convolucionales para generar señales de trading."
+      },
+      "Bayesian Networks": {
+        description: "Modelos gráficos probabilísticos que representan relaciones causales y de dependencia entre variables financieras. Útiles para modelado de riesgo, inferencia y toma de decisiones bajo incertidumbre.",
+        example: "Red Bayesiana para modelar la probabilidad de default de un portafolio de créditos, considerando interdependencias entre factores económicos y sectoriales."
+      },
+      "Explainable AI": {
+        description: "Técnicas para entender y explicar las decisiones de modelos de IA complejos en finanzas. Incluye SHAP, LIME y otras herramientas para aumentar la confianza y cumplir con regulaciones.",
+        example: "Uso de valores SHAP para explicar qué factores (ej. ingresos, deuda, sector) son más influyentes en la predicción de rating crediticio de un modelo de gradient boosting."
+      },
+      "Transformer Architectures": {
+        description: "Implementación y adaptación de arquitecturas Transformer (como BERT, GPT) para tareas financieras. Enfocado en procesamiento de texto y series temporales para capturar dependencias a largo plazo.",
+        example: "Modelo Transformer para analizar la información de 'earnings calls' y extraer sentimiento de gestión, detectando cambios sutiles en el tono y el vocabulario."
+      },
+      "Fine-tuning LLMs": {
+        description: "Adaptación de Grandes Modelos de Lenguaje (LLMs) pre-entrenados a dominios financieros específicos. Mejora la precisión en tareas como resumen de reportes, análisis de contratos o generación de contenido financiero.",
+        example: "Fine-tuning de un modelo GPT para generar resúmenes ejecutivos de informes de resultados trimestrales, adaptando el tono y el formato al estilo de análisis financiero."
+      },
+      "Financial Sentiment Analysis": {
+        description: "Análisis de sentimiento en textos financieros (noticias, tweets, reportes) para predecir movimientos del mercado o reacciones de inversionistas. Construcción de léxicos y modelos de ML/DL especializados.",
+        example: "Desarrollo de un clasificador de sentimiento en noticias económicas que pondera palabras clave financieras y su contexto, correlacionando el sentimiento con la volatilidad del mercado."
+      },
+      "Prompt Engineering": {
+        description: "Diseño y optimización de prompts para interactuar eficazmente con LLMs y obtener respuestas precisas y relevantes en el contexto financiero. Incluye técnicas de few-shot learning y encadenamiento de pensamientos (Chain-of-Thought).",
+        example: "Creación de un prompt estructurado para un LLM que, a partir de un informe anual, extrae los principales riesgos identificados por la gerencia y los clasifica según su impacto potencial."
+      },
+      "RAG Systems": {
+        description: "Implementación de sistemas de Recuperación Aumentada por Generación (RAG) para LLMs. Permite a los modelos acceder y citar fuentes de información externa (bases de datos, documentos) para respuestas más precisas y actualizadas.",
+        example: "Construcción de un sistema RAG para un LLM que responde preguntas sobre la normativa bancaria, extrayendo información relevante directamente de documentos legales y regulaciones actualizadas."
+      },
+      "Earnings Call Analysis": {
+        description: "Análisis automatizado de las transcripciones de las llamadas de resultados de empresas. Extracción de insights clave, detección de tono, temas emergentes y desviaciones del lenguaje esperado para informar decisiones de inversión.",
+        example: "Algoritmo de NLP que identifica 'red flags' o señales de cautela en las transcripciones de earnings calls, como el uso frecuente de palabras relacionadas con incertidumbre o menciones a eventos externos negativos."
+      },
+      "Document Intelligence": {
+        description: "Procesamiento y análisis de documentos estructurados y no estructurados (contratos, informes, PDFs) utilizando IA. Incluye OCR, extracción de entidades, clasificación y resumen.",
+        example: "Sistema de Document Intelligence que automatiza la extracción de cláusulas relevantes y fechas clave de contratos de derivados, agilizando el proceso de due diligence."
+      },
+      "Multimodal AI": {
+        description: "Combinación de diferentes tipos de datos (texto, imágenes, series de tiempo, audio) para modelos de IA más completos. Aplicación en finanzas para análisis de mercado holístico.",
+        example: "Modelo multimodal que predice el rendimiento de un fondo de inversión analizando el texto de los informes trimestrales, los gráficos de rendimiento histórico y el tono de las presentaciones de gestión."
+      },
+      "Portfolio Optimization": {
+        description: "Técnicas para construir carteras que maximicen el retorno para un nivel de riesgo dado (o minimicen riesgo para un retorno objetivo). Incluye modelos de Markowitz, optimización robusta y enfoques basados en riesgo.",
+        example: "Optimización de cartera global con restricciones de país y sector, utilizando Conditional Value-at-Risk (CVaR) como métrica de riesgo para minimizar pérdidas extremas."
+      },
+      "Monte Carlo Methods": {
+        description: "Técnicas de simulación para modelar sistemas complejos y calcular integrales estocásticas en finanzas. Usado en pricing de derivados, valuación de riesgo y simulación de escenarios.",
+        example: "Simulación Monte Carlo para estimar el VaR (Value at Risk) de un portafolio complejo con opciones y bonos, generando 100,000 trayectorias de precios."
+      },
+      "Risk Metrics (VaR/CVaR)": {
+        description: "Cálculo y análisis de métricas de riesgo para cuantificar la pérdida potencial en un portafolio. Incluye Value-at-Risk (VaR) y Conditional Value-at-Risk (CVaR) bajo diferentes supuestos de distribución.",
+        example: "Cálculo de VaR paramétrico y no paramétrico para un fondo de cobertura, y comparación con CVaR para entender el riesgo de cola de la distribución de retornos."
+      },
+      "Factor Models": {
+        description: "Modelos que explican los retornos de los activos financieros en función de factores macroeconómicos, sectoriales o de estilo (ej. valor, crecimiento, tamaño). Usados para atribución de rendimiento y construcción de carteras.",
+        example: "Construcción de un modelo de factores multifactorial para atribución de rendimiento de un fondo mutuo, identificando la contribución de factores de mercado, valor y momentum."
+      },
+      "Stochastic Volatility": {
+        description: "Modelos donde la volatilidad del activo subyacente no es constante sino un proceso estocástico. Mejora el pricing de opciones y la gestión de riesgo, capturando fenómenos como smile/smirk de volatilidad.",
+        example: "Implementación de modelo Heston para el pricing de opciones sobre índices bursátiles, donde la volatilidad del índice sigue un proceso de Cox-Ingersoll-Ross (CIR)."
+      },
+      "Fixed Income Modeling": {
+        description: "Modelado de instrumentos de renta fija, incluyendo bonos, swaps y MBS. Incluye modelos de tasa corta (Hull-White), modelos de mercado (Libor Market Model) y análisis de curvas de rendimiento.",
+        example: "Calibración de un modelo de tasa corta de Vasicek a la curva de rendimiento actual para valuar una cartera de bonos corporativos con opciones embedded."
+      },
+      "Credit Risk Modeling": {
+        description: "Modelado de la probabilidad de default y pérdida en caso de default de créditos y portafolios de deuda. Incluye modelos estructurales (Merton), de intensidad (Jarrow-Turnbull) y de machine learning.",
+        example: "Desarrollo de un modelo de machine learning (Gradient Boosting) para predecir la probabilidad de default de pequeñas y medianas empresas (PyMEs) basado en datos financieros y operativos."
+      },
+      "Market Microstructure": {
+        description: "Estudio de cómo los mecanismos de trading (ej. libros de órdenes, tipos de órdenes) afectan la formación de precios y la liquidez del mercado. Relevante para trading de alta frecuencia y análisis de impacto de mercado.",
+        example: "Análisis del impacto de grandes órdenes en el libro de órdenes y cómo afecta la profundidad del mercado y el deslizamiento para un activo específico."
+      },
+      "Macro-Financial Models": {
+        description: "Modelos que integran la economía real (producción, inflación) con el sector financiero (mercados, bancos). Usados para análisis de política monetaria, estabilidad financiera y proyecciones macroeconómicas.",
+        example: "Construcción de un modelo VAR (Vector Autoregressive) para analizar la interconexión entre las tasas de interés, la inflación y los rendimientos del mercado de valores."
+      },
+      "Behavioral Economics": {
+        description: "Incorporación de sesgos psicológicos y heurísticas humanas en modelos económicos y financieros. Ayuda a explicar anomalías de mercado y decisiones subóptimas de inversionistas.",
+        example: "Análisis del efecto de la aversión a las pérdidas en las decisiones de venta de inversionistas minoristas durante períodos de alta volatilidad."
+      },
+      "Game Theory": {
+        description: "Análisis de decisiones estratégicas en situaciones donde el resultado depende de las acciones de múltiples participantes. Aplicado a competencia de mercado, negociaciones y diseño de subastas.",
+        example: "Modelado de la interacción estratégica entre bancos centrales y mercados financieros en el contexto de decisiones de política monetaria."
+      },
+      "Monetary Policy": {
+        description: "Análisis y modelado de las decisiones de los bancos centrales (tasas de interés, QE) y su impacto en la economía y los mercados financieros.",
+        example: "Desarrollo de un modelo dinámico estocástico de equilibrio general (DSGE) para evaluar el impacto de un shock en la política monetaria sobre la inflación y la producción."
+      },
+      "Econometrics": {
+        description: "Aplicación de métodos estadísticos para analizar datos económicos. Incluye regresión, series temporales, modelos de panel y métodos de inferencia causal para probar teorías económicas.",
+        example: "Estimación de la elasticidad precio de la demanda de un producto usando datos de ventas y variaciones de precios, controlando por estacionalidad y efectos de promoción."
+      },
+      "DSGE Modeling": {
+        description: "Modelos de Equilibrio General Dinámicos Estocásticos que describen la economía como un sistema de agentes optimizadores que interactúan en un entorno incierto. Usados para análisis de política y proyecciones.",
+        example: "Construcción de un modelo DSGE con fricciones financieras para analizar la transmisión de shocks crediticios a la economía real."
+      },
+      "Causal Inference": {
+        description: "Técnicas para identificar relaciones de causa y efecto en datos económicos y financieros. Incluye instrumentación, diferencias en diferencias y matching para superar problemas de endogeneidad.",
+        example: "Evaluación causal del impacto de un cambio regulatorio en el comportamiento de inversión de las empresas, utilizando un enfoque de diferencias en diferencias."
+      },
+      "Network Theory": {
+        description: "Análisis de la estructura y dinámica de redes en sistemas financieros, como redes de interconexión bancaria o redes de co-propiedad. Útil para entender el riesgo sistémico y la propagación de shocks.",
+        example: "Análisis de la robustez de la red bancaria ante la quiebra de un banco sistémicamente importante, identificando los nodos más vulnerables."
+      }
+    };
+
     document.addEventListener("DOMContentLoaded", function () {
       const form = document.getElementById("contact-form");
       const successMsg = document.getElementById("form-success");
@@ -476,6 +762,39 @@
             behavior: 'smooth'
           });
         });
+      });
+
+      // Skill Modal Logic
+      const skillChips = document.querySelectorAll(".skill-chip");
+      const skillModal = document.getElementById("skillModal");
+      const modalSkillTitle = document.getElementById("modalSkillTitle");
+      const modalSkillDescription = document.getElementById("modalSkillDescription");
+      const modalSkillExample = document.getElementById("modalSkillExample");
+      const closeModal = document.querySelector(".close-modal");
+
+      skillChips.forEach(chip => {
+        chip.addEventListener("click", function () {
+          const skillName = this.dataset.skill;
+          const data = skillData[skillName];
+
+          if (data) {
+            modalSkillTitle.textContent = skillName;
+            modalSkillDescription.innerHTML = `<p>${data.description}</p>`; /* Usar innerHTML para mantener formato */
+            modalSkillExample.textContent = data.example;
+            skillModal.style.display = "flex"; // Show the modal
+          }
+        });
+      });
+
+      closeModal.addEventListener("click", function () {
+        skillModal.style.display = "none"; // Hide the modal
+      });
+
+      // Close modal when clicking outside of it
+      window.addEventListener("click", function (event) {
+        if (event.target === skillModal) {
+          skillModal.style.display = "none";
+        }
       });
     });
   </script>
