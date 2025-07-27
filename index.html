@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Deep Finance Lab | Raúl Muñoz R.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0093c9;
+      --dark: #111111;
+      --light: #f8f9fa;
+      --gray: #444444;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #ffffff;
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Navbar Premium */
+    .navbar {
+      background-color: var(--dark);
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1.25rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    .navbar a:hover {
+      color: var(--primary);
+    }
+    
+    .navbar a.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .navbar a.active:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 147, 201, 0.3);
+    }
+    
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .hero-image {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transition: var(--transition);
+    }
+    
+    .hero-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+      background: linear-gradient(90deg, var(--dark), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    h2 {
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      font-weight: 400;
+      color: var(--gray);
+      margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Button Styles */
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--dark);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button:hover {
+      background-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Section Styles */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      margin: 0.5rem auto;
+      border-radius: 2px;
+    }
+    
+    /* Card Styles */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary);
+    }
+    
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    
+    /* Skills Section */
+    .skills-section {
+      margin-bottom: 3rem;
+    }
+
+    .skill-category {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(0, 147, 201, 0.2);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .skill-chip {
+      background: rgba(0, 147, 201, 0.08);
+      color: var(--primary);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 147, 201, 0.2);
+    }
+
+    .skill-chip:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 147, 201, 0.2);
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .navbar {
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+      
+      .hero {
+        padding: 3rem 1rem;
+      }
+      
+      .section {
+        padding: 3rem 1rem;
+      }
+      
+      .skills-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#oferta">Servicios</a>
+    <a href="#skills">Skills</a>
+    <a class="active" href="#contacto">Contacto</a>
+  </nav>
+
+  <section class="hero">
+    <img src="robot_financiero.jpg" alt="Robot financiero en laptop" class="hero-image">
+    <h1>Deep Finance Lab</h1>
+    <h2>Mercado de Capitales | Finanzas Cuantitativas | IA Generativa</h2>
+    <a class="button" href="https://www.linkedin.com/in/ra%C3%BAl-mu%C3%B1oz-6793161b" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 3C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19ZM18.5 18.5V13.2C18.5 12.3354 18.1565 11.5062 17.5452 10.8948C16.9338 10.2835 16.1046 9.94 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17C14.6813 12.17 15.0374 12.3175 15.2999 12.5801C15.5625 12.8426 15.71 13.1987 15.71 13.57V18.5H18.5ZM6.88 8.56C7.32556 8.56 7.75288 8.383 8.06794 8.06794C8.383 7.75288 8.56 7.32556 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19C6.43178 5.19 6.00193 5.36805 5.68499 5.68499C5.36805 6.00193 5.19 6.43178 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56ZM8.27 18.5V10.13H5.5V18.5H8.27Z" fill="currentColor"/>
+      </svg>
+      Ver perfil LinkedIn
+    </a>
+  </section>
+
+  <section id="oferta" class="section">
+    <h2 class="section-title">Oferta de valor</h2>
+    <p style="max-width: 700px; margin: 0 auto 2rem; text-align: center;">
+      Integro Inteligencia Artificial con estrategias del Mercado de Capitales para diseñar soluciones financieras robustas y automatizadas.
+    </p>
+    
+    <div class="card-grid">
+      <div class="card" id="riesgo">
+        <h3>Modelado de riesgo</h3>
+        <p>Desarrollo modelos estadísticos y de machine learning para estimar probabilidades de default en instrumentos de deuda y crédito corporativo.</p>
+      </div>
+      
+      <div class="card" id="trading">
+        <h3>Trading algorítmico</h3>
+        <p>Construyo sistemas de decisión automatizada usando señales técnicas, análisis de series temporales y backtesting con datos reales.</p>
+      </div>
+      
+      <div class="card" id="portafolios">
+        <h3>Optimización de carteras</h3>
+        <p>Aplico técnicas como optimización convexa y métodos evolutivos para estructurar carteras eficientes bajo restricciones reales.</p>
+      </div>
+      
+      <div class="card" id="nlp">
+        <h3>Procesamiento de lenguaje</h3>
+        <p>Uso NLP y transformers para extraer señales económicas desde texto no estructurado como noticias y reportes.</p>
+      </div>
+      
+      <div class="card" id="anomalías">
+        <h3>Detección de anomalías</h3>
+        <p>Algoritmos para identificar comportamientos atípicos en flujos de datos financieros con técnicas avanzadas.</p>
+      </div>
+      
+      <div class="card" id="stress">
+        <h3>Simulación de escenarios</h3>
+        <p>Simulo condiciones adversas para portafolios utilizando Monte Carlo, redes bayesianas y modelos generativos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre-mi" class="section" style="background: #f8f9fa;">
+    <div style="max-width: 700px; margin: 0 auto;">
+      <h2 class="section-title">Sobre Mí</h2>
+      <p style="margin-bottom: 1.5rem;">
+        Soy <strong>experto en Mercado de Capitales, Finanzas y Economía</strong>, con especialización en <strong>Ciencia de Datos Aplicada e Inteligencia Artificial</strong>.
+        Mi trabajo se sitúa en la intersección entre teoría económica, tecnología cuantitativa y automatización inteligente.
+      </p>
+      <p>
+        Combino herramientas tradicionales de análisis financiero con técnicas avanzadas de IA: desde <em>machine learning</em> supervisado, hasta modelos probabilísticos bayesianos, <em>deep learning</em> y reflexiones estratégicas sobre la evolución hacia la AGI (Artificial General Intelligence).
+      </p>
+    </div>
+  </section>
+
+  <section id="skills" class="section">
+    <h2 class="section-title">Skills Técnicas</h2>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Mercado de Capitales</h3>
+      <div class="skills-grid">
+        <span class="skill-chip">Análisis Fundamental</span>
+        <span class="skill-chip">Valuación de Activos</span>
+        <span class="skill-chip">Asset Allocation</span>
+        <span class="skill-chip">Mercados de Deuda</span>
+        <span class="skill-chip">Capital Markets</span>
+        <span class="skill-chip">IPO Advisory</span>
+        <span class="skill-chip">Private Equity</span>
+        <span class="skill-chip">M&A Analysis</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Derivados & Trading</h3>
+      <div class="skills-grid">
+        <span class="skill-chip">Options Pricing</span>
+        <span class="skill-chip">Volatility Arbitrage</span>
+        <span class="skill-chip">Exotic Derivatives</span>
+        <span class="skill-chip">Algorithmic Trading</span>
+        <span class="skill-chip">Quant Strategies</span>
+        <span class="skill-chip">HFT Systems</span>
+        <span class="skill-chip">Risk Neutral Valuation</span>
+        <span class="skill-chip">Stochastic Calculus</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Inteligencia Artificial</h3>
+      <div class="skills-grid">
+        <span class="skill-chip">Deep Learning</span>
+        <span class="skill-chip">Reinforcement Learning</span>
+        <span class="skill-chip">Generative Models</span>
+        <span class="skill-chip">Time Series Forecasting</span>
+        <span class="skill-chip">Anomaly Detection</span>
+        <span class="skill-chip">Computer Vision</span>
+        <span class="skill-chip">Bayesian Networks</span>
+        <span class="skill-chip">Explainable AI</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">LLMs & NLP</h3>
+      <div class="skills-grid">
+        <span class="skill-chip">Transformer Architectures</span>
+        <span class="skill-chip">Fine-tuning LLMs</span>
+        <span class="skill-chip">Financial Sentiment Analysis</span>
+        <span class="skill-chip">Prompt Engineering</span>
+        <span class="skill-chip">RAG Systems</span>
+        <span class="skill-chip">Earnings Call Analysis</span>
+        <span class="skill-chip">Document Intelligence</span>
+        <span class="skill-chip">Multimodal AI</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Finanzas Cuantitativas</h3>
+      <div class="skills-grid">
+        <span class="skill-chip">Portfolio Optimization</span>
+        <span class="skill-chip">Monte Carlo Methods</span>
+        <span class="skill-chip">Risk Metrics (VaR/CVaR)</span>
+        <span class="skill-chip">Factor Models</span>
+        <span class="skill-chip">Stochastic Volatility</span>
+        <span class="skill-chip">Fixed Income Modeling</span>
+        <span class="skill-chip">Credit Risk Modeling</span>
+        <span class="skill-chip">Market Microstructure</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Economía</h3>
+      <div class="skills-grid">
+        <span class="skill-chip">Macro-Financial Models</span>
+        <span class="skill-chip">Behavioral Economics</span>
+        <span class="skill-chip">Game Theory</span>
+        <span class="skill-chip">Monetary Policy</span>
+        <span class="skill-chip">Econometrics</span>
+        <span class="skill-chip">DSGE Modeling</span>
+        <span class="skill-chip">Causal Inference</span>
+        <span class="skill-chip">Network Theory</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="section" style="background: #f8f9fa;">
+    <div style="max-width: 600px; margin: 0 auto;">
+      <h2 class="section-title">Contáctame</h2>
+      <form action="https://formspree.io/f/manbokpo" id="contact-form" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Nombre</label>
+          <input id="name" name="name" required type="text" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; transition: var(--transition);">
+        </div>
+        
+        <div>
+          <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Correo electrónico</label>
+          <input id="email" name="email" required type="email" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; transition: var(--transition);">
+        </div>
+        
+        <div>
+          <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Mensaje</label>
+          <textarea id="message" name="message" required rows="5" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; transition: var(--transition);"></textarea>
+        </div>
+        
+        <button type="submit" class="button" style="align-self: flex-start;">Enviar Mensaje</button>
+        
+        <p id="form-success" style="display:none; color: #28a745; font-weight: 500; text-align: center;">✅ Tu mensaje fue enviado correctamente.</p>
+        <p id="form-error" style="display:none; color: #dc3545; font-weight: 500; text-align: center;">❌ Hubo un error al enviar. Intenta nuevamente.</p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("contact-form");
+      const successMsg = document.getElementById("form-success");
+      const errorMsg = document.getElementById("form-error");
+
+      if (form) {
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          successMsg.style.display = "none";
+          errorMsg.style.display = "none";
+          const data = new FormData(form);
+
+          try {
+            const response = await fetch(form.action, {
+              method: form.method,
+              body: data,
+              headers: { 'Accept': 'application/json' }
+            });
+            if (response.ok) {
+              successMsg.style.display = "block";
+              form.reset();
+            } else {
+              errorMsg.style.display = "block";
+            }
+          } catch (error) {
+            errorMsg.style.display = "block";
+          }
+        });
+      }
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
