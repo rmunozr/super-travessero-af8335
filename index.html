@@ -177,6 +177,7 @@
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
       transition: var(--transition);
       border: 1px solid rgba(0, 0, 0, 0.05);
+      cursor: pointer; /* Añadido para indicar que es clickeable */
     }
     
     .card:hover {
@@ -246,8 +247,8 @@
       box-shadow: 0 4px 8px rgba(0, 147, 201, 0.2);
     }
 
-    /* Skill Modal Styles */
-    .skill-modal {
+    /* Skill Modal Styles - Renombrado para ser más genérico */
+    .info-modal {
       display: none; /* Hidden by default */
       position: fixed; /* Stay in place */
       top: 0;
@@ -277,7 +278,7 @@
       font-size: 1.5rem;
     }
     
-    .modal-example {
+    .modal-example { /* Reutilizado para Casos de Uso */
       background-color: rgba(0, 147, 201, 0.05); /* Fondo suave */
       padding: 1rem;
       border-radius: 8px;
@@ -322,6 +323,14 @@
       /* .industry-grid was removed in favor of .card-grid for consistency */
     }
   </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XXXXXXXXXX'); // Reemplaza 'G-XXXXXXXXXX' con tu ID de Medición de GA4
+  </script>
 </head>
 <body>
   <nav class="navbar">
@@ -332,7 +341,7 @@
   </nav>
 
   <section class="hero">
-    <img src="robot_financiero.jpg" alt="Robot financiero en laptop" class="hero-image">
+    <img src="DFL.jpeg" alt="Logo de Deep Finance Lab" class="hero-image">
     <h1>Deep Finance Lab</h1>
     <h2>Mercado de Capitales | Finanzas Cuantitativas | IA Generativa</h2>
     <a class="button" href="https://www.linkedin.com/in/ra%C3%BAl-mu%C3%B1oz-6793161b" target="_blank">
@@ -350,32 +359,32 @@
     </p>
     
     <div class="card-grid">
-      <div class="card" id="riesgo">
+      <div class="card" id="riesgo" data-title="Modelado de riesgo" data-use-cases="Evaluación de carteras de préstamos para bancos.|Previsión de incumplimientos para bonos corporativos.|Detección temprana de riesgo de quiebra en startups.">
         <h3>Modelado de riesgo</h3>
         <p>Desarrollo modelos estadísticos y de machine learning para estimar probabilidades de default en instrumentos de deuda y crédito corporativo. Utilizo técnicas avanzadas como survival analysis, gradient boosting y redes neuronales para capturar relaciones no lineales en datos financieros.</p>
       </div>
       
-      <div class="card" id="trading">
+      <div class="card" id="trading" data-title="Trading algorítmico" data-use-cases="Implementación de estrategias de arbitraje de baja latencia.|Sistemas de market making automatizados para criptomonedas.|Ejecución de órdenes VWAP/TWAP para minimizar impacto en el mercado.">
         <h3>Trading algorítmico</h3>
         <p>Construyo sistemas de decisión automatizada usando señales técnicas, análisis de series temporales y backtesting con datos reales. Implemento estrategias basadas en machine learning, procesamiento de lenguaje natural y análisis de microestructura de mercados.</p>
       </div>
       
-      <div class="card" id="portafolios">
+      <div class="card" id="portafolios" data-title="Optimización de carteras" data-use-cases="Construcción de carteras eficientes para fondos de inversión.|Optimización de asignación de activos para fondos de pensiones.|Gestión de riesgo de portafolio con VaR y CVaR.">
         <h3>Optimización de carteras</h3>
         <p>Aplico técnicas como optimización convexa y métodos evolutivos para estructurar carteras eficientes bajo restricciones reales. Desarrollo modelos que consideran correlaciones dinámicas, restricciones regulatorias y costos de transacción para maximizar el ratio de Sharpe.</p>
       </div>
       
-      <div class="card" id="nlp">
+      <div class="card" id="nlp" data-title="Procesamiento de lenguaje" data-use-cases="Análisis de sentimiento de noticias financieras para trading.|Extracción de información clave de informes anuales.|Sistemas de pregunta-respuesta sobre regulaciones bancarias.">
         <h3>Procesamiento de lenguaje</h3>
         <p>Uso NLP y transformers para extraer señales económicas desde texto no estructurado como noticias y reportes. Implemento modelos de sentiment analysis específicos para el dominio financiero y sistemas de pregunta-respuesta sobre documentos corporativos.</p>
       </div>
       
-      <div class="card" id="anomalías">
+      <div class="card" id="anomalías" data-title="Detección de anomalías" data-use-cases="Identificación de transacciones fraudulentas en tiempo real.|Detección de manipulación de mercado.|Monitoreo de datos de sensores para mantenimiento predictivo.">
         <h3>Detección de anomalías</h3>
         <p>Algoritmos para identificar comportamientos atípicos en flujos de datos financieros con técnicas avanzadas. Combino métodos estadísticos tradicionales con autoencoders y GANs para detectar fraudes, errores de datos y oportunidades de arbitraje.</p>
       </div>
       
-      <div class="card" id="stress">
+      <div class="card" id="stress" data-title="Simulación de escenarios" data-use-cases="Stress testing de carteras de inversión bajo crisis económica.|Simulación de impactos de cambios regulatorios.|Proyecciones de flujo de caja bajo diferentes condiciones de mercado.">
         <h3>Simulación de escenarios</h3>
         <p>Simulo condiciones adversas para portafolios utilizando Monte Carlo, redes bayesianas y modelos generativos. Desarrollo stress tests personalizados que incorporan shocks macroeconómicos, eventos de cola y correlaciones extremas entre activos.</p>
       </div>
@@ -388,19 +397,24 @@
       Nuestros modelos financieros adaptados generan eficiencias disruptivas en diversos sectores:
     </p>
     
-    <div class="card-grid"> <div class="card"> <h3>Salud</h3>
+    <div class="card-grid">
+      <div class="card" data-title="Salud" data-use-cases="Diagnóstico precoz de enfermedades mediante análisis de imágenes.|Optimización de la programación de citas médicas.|Predicción de brotes epidémicos.">
+        <h3>Salud</h3>
         <p>Diagnósticos automatizados mediante modelos predictivos adaptados de análisis de riesgo crediticio, identificando patrones complejos en imágenes médicas y datos clínicos. Lectura automatizada de exámenes médicos usando algoritmos de reconocimiento de patrones financieros reconvertidos para análisis de imágenes DICOM. Sugerencias de insights clínicos basados en análisis de correlaciones no lineales entre variables de salud.</p>
       </div>
       
-      <div class="card"> <h3>Logística</h3>
+      <div class="card" data-title="Logística" data-use-cases="Optimización de rutas de entrega para flotas de camiones.|Previsión de demanda en almacenes para gestión de inventario.|Asignación dinámica de recursos en cadenas de suministro.">
+        <h3>Logística</h3>
         <p>Ruteo inteligente basado en teoría de portafolios eficientes, optimizando flotas de transporte como si fueran activos financieros. Modelos predictivos de demanda adaptados de series temporales financieras para gestión de inventarios. Sistemas de asignación dinámica inspirados en algoritmos de trading de alta frecuencia.</p>
       </div>
       
-      <div class="card"> <h3>Energía</h3>
+      <div class="card" data-title="Energía" data-use-cases="Predicción de precios de energía en mercados spot.|Optimización de la producción en plantas de energía renovable.|Análisis de riesgo en proyectos de infraestructura energética.">
+        <h3>Energía</h3>
         <p>Predicción de precios spot con redes neuronales temporales adaptadas de modelos de forecasting financiero. Optimización de generación/distribución mediante modelos estocásticos de procesos de difusión. Sistemas de trading algorítmico aplicado a mercados de energía y commodities.</p>
       </div>
       
-      <div class="card"> <h3>Retail</h3>
+      <div class="card" data-title="Retail" data-use-cases="Sistemas de recomendación de productos personalizados.|Optimización de precios dinámicos en tiendas online.|Análisis de comportamiento del cliente para campañas de marketing.">
+        <h3>Retail</h3>
         <p>Sistemas de recomendación con embeddings financieros reconvertidos para análisis de comportamiento de compra. Pronóstico de demanda usando series temporales multivariadas y modelos de factorización de matrices. Optimización de precios mediante algoritmos de market making adaptados al comercio minorista.</p>
       </div>
     </div>
@@ -501,17 +515,19 @@
     </div>
   </section>
 
-  <div class="skill-modal" id="skillModal">
+  <div class="info-modal" id="infoModal">
     <div class="modal-content">
       <span class="close-modal">&times;</span>
-      <h3 class="modal-title" id="modalSkillTitle">Skill Title</h3>
-      <div id="modalSkillDescription"></div>
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <div id="modalDescription"></div>
       <div class="modal-example">
-        <strong>Ejemplo aplicado:</strong>
-        <p id="modalSkillExample"></p>
+        <strong>Ejemplo aplicado:</strong> <span id="modalExample"></span>
+        <strong id="useCasesLabel" style="display: none;">Casos de Uso:</strong>
+        <ul id="modalUseCases" style="list-style: disc; margin-left: 1.25rem; margin-top: 0.5rem;"></ul>
       </div>
     </div>
   </div>
+
 
   <section id="contacto" class="section">
     <div style="max-width: 600px; margin: 0 auto;">
@@ -766,10 +782,13 @@
 
       // Skill Modal Logic
       const skillChips = document.querySelectorAll(".skill-chip");
-      const skillModal = document.getElementById("skillModal");
-      const modalSkillTitle = document.getElementById("modalSkillTitle");
-      const modalSkillDescription = document.getElementById("modalSkillDescription");
-      const modalSkillExample = document.getElementById("modalSkillExample");
+      // Renombrado para ser más genérico y único
+      const infoModal = document.getElementById("infoModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalDescription = document.getElementById("modalDescription");
+      const modalExample = document.getElementById("modalExample");
+      const modalUseCases = document.getElementById("modalUseCases"); // Nuevo elemento para casos de uso
+      const useCasesLabel = document.getElementById("useCasesLabel"); // Etiqueta "Casos de Uso"
       const closeModal = document.querySelector(".close-modal");
 
       skillChips.forEach(chip => {
@@ -778,22 +797,60 @@
           const data = skillData[skillName];
 
           if (data) {
-            modalSkillTitle.textContent = skillName;
-            modalSkillDescription.innerHTML = `<p>${data.description}</p>`; /* Usar innerHTML para mantener formato */
-            modalSkillExample.textContent = data.example;
-            skillModal.style.display = "flex"; // Show the modal
+            modalTitle.textContent = skillName;
+            modalDescription.innerHTML = `<p>${data.description}</p>`;
+            
+            // Mostrar ejemplo aplicado para skills
+            modalExample.textContent = data.example;
+            modalExample.closest('.modal-example').style.display = 'block'; // Asegurarse de que el div padre esté visible
+            useCasesLabel.style.display = 'none'; // Ocultar etiqueta de casos de uso
+            modalUseCases.innerHTML = ''; // Limpiar casos de uso anteriores
+
+            infoModal.style.display = "flex"; // Show the modal
           }
         });
       });
 
+      // Lógica para las tarjetas de "Oferta de valor" y "Aplicaciones a Otras Industrias"
+      const infoCards = document.querySelectorAll(".card[data-title][data-use-cases]");
+      infoCards.forEach(card => {
+        card.addEventListener("click", function() {
+          const cardTitle = this.dataset.title;
+          const cardDescription = this.querySelector('p').innerHTML; // Obtener la descripción del párrafo
+          const cardUseCases = this.dataset.useCases;
+
+          modalTitle.textContent = cardTitle;
+          modalDescription.innerHTML = `<p>${cardDescription}</p>`; // Usar innerHTML para mantener el formato del p
+
+          // Ocultar ejemplo aplicado para skills
+          modalExample.textContent = '';
+          modalExample.closest('.modal-example').style.display = 'block'; // Mantener el div visible para el label y lista
+          
+          // Mostrar etiqueta y casos de uso
+          useCasesLabel.style.display = 'block'; 
+          modalUseCases.innerHTML = ''; // Limpiar lista anterior
+
+          if (cardUseCases) {
+            const casesArray = cardUseCases.split('|'); // Dividir por el carácter '|'
+            casesArray.forEach(useCase => {
+              const li = document.createElement('li');
+              li.textContent = useCase.trim(); // Eliminar espacios en blanco
+              modalUseCases.appendChild(li);
+            });
+          }
+
+          infoModal.style.display = "flex";
+        });
+      });
+
       closeModal.addEventListener("click", function () {
-        skillModal.style.display = "none"; // Hide the modal
+        infoModal.style.display = "none"; // Hide the modal
       });
 
       // Close modal when clicking outside of it
       window.addEventListener("click", function (event) {
-        if (event.target === skillModal) {
-          skillModal.style.display = "none";
+        if (event.target === infoModal) {
+          infoModal.style.display = "none";
         }
       });
     });
