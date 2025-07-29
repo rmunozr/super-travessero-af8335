@@ -360,6 +360,35 @@
       
       /* .industry-grid was removed in favor of .card-grid for consistency */
     }
+
+    /* Styles for the pop-up messages */
+    .popup-message {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        z-index: 3000; /* Higher than modal */
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup-success {
+        background-color: #28a745; /* Green */
+    }
+
+    .popup-error {
+        background-color: #dc3545; /* Red */
+    }
+
+    .popup-message.show {
+        opacity: 1;
+    }
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
@@ -638,8 +667,7 @@
         
         <button type="submit" class="button contact-submit-btn" style="align-self: flex-start;">Enviar Mensaje</button>
         
-        <p id="form-success" style="display:none; color: #28a745; font-weight: 500; text-align: center;">✅ Tu mensaje fue enviado correctamente.</p>
-        <p id="form-error" style="display:none; color: #dc3545; font-weight: 500; text-align: center;">❌ Hubo un error al enviar. Intenta nuevamente.</p>
+        <div id="global-popup-message" class="popup-message"></div>
       </form>
     </div>
   </section>
@@ -837,10 +865,7 @@
       const emailError = document.getElementById("email-error");
       const messageError = document.getElementById("message-error");
       const submitButton = form.querySelector('.contact-submit-btn');
-
-
-      const successMsg = document.getElementById("form-success");
-      const errorMsg = document.getElementById("form-error");
+      const globalPopup = document.getElementById('global-popup-message');
 
       // Modal elements
       const infoModal = document.getElementById("infoModal");
@@ -859,6 +884,22 @@
         useCasesLabel.style.display = 'none';
         modalUseCases.style.display = 'none';
         modalUseCases.innerHTML = '';
+      }
+
+      // Function to show a pop-up message
+      function showPopup(message, type) {
+        globalPopup.textContent = message;
+        globalPopup.className = 'popup-message show'; // Reset classes and add 'show'
+        if (type === 'success') {
+          globalPopup.classList.add('popup-success');
+        } else if (type === 'error') {
+          globalPopup.classList.add('popup-error');
+        }
+        setTimeout(() => {
+          globalPopup.classList.remove('show');
+          // Give some time for fade out before clearing
+          setTimeout(() => { globalPopup.textContent = ''; globalPopup.className = 'popup-message'; }, 500); 
+        }, 3000); // Hide after 3 seconds
       }
 
       // Handle skill chip clicks
@@ -928,11 +969,11 @@
       if (form) {
         form.addEventListener("submit", async function (e) {
           e.preventDefault();
-          successMsg.style.display = "none";
-          errorMsg.style.display = "none";
+          // Hide all error/success messages
           nameError.style.display = "none";
           emailError.style.display = "none";
           messageError.style.display = "none";
+          globalPopup.classList.remove('show', 'popup-success', 'popup-error'); // Hide any active popups
 
           let isValid = true;
 
@@ -963,6 +1004,7 @@
           }
 
           if (!isValid) {
+            showPopup("Por favor, corrige los errores del formulario.", "error");
             return; // Stop submission if validation fails
           }
 
@@ -979,22 +1021,20 @@
               headers: { 'Accept': 'application/json' }
             });
             if (response.ok) {
-              successMsg.style.display = "block";
+              showPopup("¡Mensaje enviado exitosamente!", "success");
               form.reset();
-              submitButton.innerHTML = '✅ Enviado!';
+              // No need to change button text to "Enviado!" permanently, popup handles it
             } else {
-              errorMsg.style.display = "block";
-              submitButton.innerHTML = 'Enviar Mensaje';
+              // Try to parse error from response if available
+              const errorData = await response.json();
+              const errorMessage = errorData.error || "Hubo un error al enviar tu mensaje. Intenta nuevamente.";
+              showPopup(errorMessage, "error");
             }
           } catch (error) {
-            errorMsg.style.display = "block";
-            submitButton.innerHTML = 'Enviar Mensaje';
+            showPopup("Hubo un problema de conexión. Intenta nuevamente.", "error");
           } finally {
+            submitButton.innerHTML = 'Enviar Mensaje'; // Reset button text
             submitButton.disabled = false;
-            // Reset button text after a short delay for success/error visibility
-            if (successMsg.style.display === "block") {
-                setTimeout(() => { submitButton.innerHTML = 'Enviar Mensaje'; }, 3000);
-            }
           }
         });
       }
