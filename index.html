@@ -98,9 +98,17 @@
       font-weight: 700;
       margin-bottom: 1rem;
       line-height: 1.2;
-      background: linear-gradient(90deg, var(--dark), var(--primary));
+      /* Degradado con brillo blanco central y animación */
+      background: linear-gradient(90deg, var(--dark) 20%, #ffffffaa 50%, var(--primary) 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: shine 2s linear infinite alternate; /* Animación más rápida y lineal */
+    }
+
+    @keyframes shine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
     }
     
     h2 {
@@ -604,9 +612,8 @@
         <ul id="modalUseCases" style="list-style: disc; margin-left: 1.25rem; margin-top: 0.5rem;"></ul>
       </div>
     </div>
-  </div>
-
-
+  </div
+  
   <section id="contacto" class="section">
     <div style="max-width: 600px; margin: 0 auto;">
       <h2 class="section-title">Contáctame</h2>
