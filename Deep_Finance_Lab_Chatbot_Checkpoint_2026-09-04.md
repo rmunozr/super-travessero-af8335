@@ -1,136 +1,144 @@
-# Deep Finance Lab Chatbot — Checkpoint
+# Deep Finance Lab Chatbot — Persistent Checkpoint
 
-**Last updated:** 5 September 2026
+**Last updated:** 20 September 2026
 **Public site:** https://deepfinancelab.com
 **Netlify project:** `super-travesseiro-af8335`
-**GitHub repository:** `rmunozr/super-travessero-af8335` (`master`)
+**GitHub repository:** `rmunozr/super-travessero-af8335`
+**Production branch:** `master`
+**Current remote master:** `521c8d1`
 
-## Objective
+## Current production state
 
-Deploy a permanent website chatbot that can answer enquiries with Grok, check live availability across four professionals, create and cancel Google Calendar appointments, and send confirmations by Gmail and WhatsApp.
+- The new bilingual website and chatbot are deployed through Netlify.
+- Spanish is the default language at `/` (`index.html`).
+- The language switch offers **English** and opens `/index.en` (`index.en.html`).
+- The English page offers **Español** and returns to `/`.
+- The legacy `/index.es` route remains available and points to the English version through its switch.
+- The chatbot is loaded on both languages through `chatbot-es.js` and selects its language from the page `lang` attribute.
+- GitHub PR #1 published the complete bilingual chatbot release.
+- GitHub PR #2 changed the production default language to Spanish.
+- Netlify checks passed before both merges.
+- Production bootstrap and AI requests return HTTP 200; the earlier chatbot HTTP 502 is not currently reproducible.
+- Fourteen local function tests pass and the dependency audit reports no known production vulnerabilities.
 
-## Completed
+## Bot architecture
 
-- English is the default site language in `index.html`; Spanish is available in `index.es.html`, with reciprocal language links.
-- Embedded bilingual chatbot UI and scheduling flow prepared on both language versions.
-- Netlify Functions backend prepared for bootstrap, availability, booking, cancellation and conversational questions.
-- Grok/xAI integration implemented through the Responses API at `https://api.x.ai/v1`.
-- Netlify variables configured:
-  - `XAI_API_KEY` as a secret.
-  - `XAI_MODEL=grok-4.6`.
-- Existing `OPENAI_API_KEY` retained but unused by the new code.
-- Four Google calendars verified under `rmunozr@gmail.com`:
-  - Professional 1: `e65c19104aeaa37d446e70e7a25d18d8316625a2fc5e2cd9a416460730fc4793@group.calendar.google.com`
-  - Professional 2: `692f1ae38ca4012bf1872994dc6c3ee32d37779e74aeff602e8fad83d04fcacb@group.calendar.google.com`
-  - Professional 3: `70907a1dad32cba947f3ad51d4de28a16737c9c7e4af5b49623ef467c3e35332@group.calendar.google.com`
-  - Professional 4: `92da99225e73f0ed464f0bccca823f7f73fe769ff0e533e4ee861dc27203a2de@group.calendar.google.com`
-- Working hours configured for Monday–Friday, 09:00–18:00, `America/Santiago`.
-- Booking references strengthened to 128-bit random values (`DFL-` plus 32 hexadecimal characters).
-- OAuth backend separated into:
-  - Calendar authorization for `rmunozr@gmail.com`.
-  - Gmail authorization for `dfl@deepfinancelab.com`.
-- Privacy and Terms pages prepared as `privacy.html` and `terms.html`.
-- JavaScript files passed syntax validation.
+The system is deliberately hybrid:
 
-## Local pre-publish hardening (5 September 2026)
+1. Deterministic workflows handle availability, booking identification, booking creation, booking lookup and cancellation.
+2. xAI handles only bounded free-form questions about Deep Finance Lab.
+3. The web channel and WhatsApp channel share the calendar, AI, records and notification libraries.
 
-- WhatsApp webhook signature validation now fails closed when `WHATSAPP_APP_SECRET` is absent.
-- Signature validation supports Base64-encoded Netlify request bodies.
-- Meta and xAI network calls have bounded timeouts to reduce the risk of a Netlify 502.
-- WhatsApp message deduplication now uses an explicit 24-hour logical expiry.
-- Web cancellation accepts the complete 128-bit booking reference.
-- Dependency versions were updated and locked; `npm audit` reports zero known vulnerabilities.
-- Twelve local function tests pass, including webhook verification, signature, bilingual menu, private session keys, aligned calendar slots and localized Meta outbound-template cases.
-- Web and WhatsApp now expose the same core capabilities: bilingual enquiries, availability, booking, cancellation and confirmations.
-- Calendar, booking, cancellation, AI and email failures return a useful localized WhatsApp response instead of leaving the user without an answer.
-- WhatsApp sessions use keyed hashes instead of raw phone numbers as storage keys.
-- Webhook message states distinguish processing, ready-to-retry and sent events to reduce lost replies and duplicate reservations.
-- `.gitignore` excludes local secrets, dependencies, Netlify state, logs and uploaded working screenshots.
-- These changes are committed locally only until explicit authorization is given for the push that may trigger Netlify deployment.
+### Current free-text routing
 
-## Local client records and reminders (5 September 2026)
+- A random message entered while the bot is at the main menu is not automatically sent to Grok.
+- At the menu, unrecognized text causes the bot to show the available options again.
+- The user must currently select **Ask a question / Hacer una consulta**; the next message is then sent to Grok with the system instructions.
+- Text entered during booking, lookup or cancellation is interpreted exclusively by the deterministic state machine.
+- The direct backend action `ask` is the only web action that invokes the AI question-answering service.
 
-- Added a Google Sheets repository for `Clients`, `Appointments`, `Reminders` and `Audit` tabs.
-- Added deterministic client identifiers using `DATA_HASH_SECRET`; raw contact details are never used as row keys.
-- Booking now records the client, appointment and unique 24-hour/2-hour email and WhatsApp reminder jobs.
-- Cancellation requires matching email or phone, updates the appointment and cancels pending reminders.
-- Web and WhatsApp can retrieve active bookings using the contact identity; WhatsApp uses the sender number.
-- Added a Netlify Scheduled Function that checks due reminders every 15 minutes, sends them and records attempts/errors.
-- Failed reminders retry up to three times; deterministic reminder IDs prevent duplicate jobs.
-- Added bilingual Gmail reminder content and separate Meta reminder template configuration for English and Spanish.
-- Added `scripts/setup-sheets.js` to create/initialize the required tabs after explicit authorization.
-- Fourteen local tests pass and `npm audit --omit=dev` reports zero known vulnerabilities.
-- A private native Google Sheet named **Deep Finance Lab Operations** was created under the `rmunozr@gmail.com` Drive account, inside the private `ChatGPT` folder.
-- The spreadsheet contains the verified tabs `Clients`, `Appointments`, `Reminders` and `Audit`, with the exact headers expected by the Functions.
-- Netlify now contains `GOOGLE_SHEETS_SPREADSHEET_ID` and `DATA_HASH_SECRET` as secret production values, scoped to Builds, Functions and Runtime.
-- No production deployment was triggered while adding these variables.
+### Optional future conversational improvement — not implemented
 
-Additional variables required before production:
+- A future version could add intent routing so ordinary informational questions reach Grok without requiring the user to select option 4 first.
+- Messages about booking, availability, existing reservations or cancellation must continue through deterministic workflows.
+- Ambiguous messages should trigger a clarification instead of an irreversible action.
+- Grok must never create, change or cancel an appointment directly.
+- Expand the approved Deep Finance Lab knowledge/instructions to explicitly describe implementation of bilingual web and WhatsApp bots, calendar integration, client records, email/WhatsApp notifications and internal workflow automation.
+- Expected example: “¿Qué ofrecen en implementación de bots?” should receive a direct commercial answer about these services, followed by a useful qualification question.
 
-- `GOOGLE_SHEETS_REFRESH_TOKEN`
-- `WHATSAPP_REMINDER_TEMPLATE_NAME_EN`
-- `WHATSAPP_REMINDER_TEMPLATE_LANGUAGE_EN`
-- `WHATSAPP_REMINDER_TEMPLATE_NAME_ES`
-- `WHATSAPP_REMINDER_TEMPLATE_LANGUAGE_ES`
+### AI configuration
 
-## Google Cloud status
+- Provider: xAI, using its OpenAI-compatible endpoint `https://api.x.ai/v1`.
+- Default model in code: `grok-4.6`; `XAI_MODEL` can override it.
+- Maximum output: 350 tokens.
+- Request timeout: 8 seconds.
+- Automatic retries: disabled.
+- Provider-side storage request: `store: false`.
+- Production AI is configured and returned `demo: false` during the latest verification.
+- Scope is limited to Deep Finance Lab services and appointment guidance.
+- Personalized investment, legal, tax and medical advice is prohibited.
+- Free-form AI cannot create, change or cancel appointments.
 
-Project created:
+### Scheduling configuration
 
-- Name: **Deep Finance Lab Chatbot**
-- Project ID: `deep-finance-lab-chatbot`
-- Project number: `522896436091`
-- Organization: none
+- Time zone: `America/Santiago`.
+- Business hours: 09:00–18:00.
+- Appointment duration: 60 minutes.
+- Availability horizon presented by the channels: 21 days.
+- Four configurable professional calendars.
+- Current service groups: Strategic Finance, Quantitative Analytics and AI Advisory.
+- Production reports `demo: false`.
+- Booking references use `DFL-` plus 32 hexadecimal characters.
+- Cancellation requires both the reference and matching contact identity.
 
-Enabled APIs:
+## Client records and reminders
 
-- Google Calendar API
-- Gmail API
+- Google Sheets-backed repositories exist for `Clients`, `Appointments`, `Reminders` and `Audit`.
+- Client identifiers are derived with `DATA_HASH_SECRET`; raw contact details are not used as record keys.
+- Successful bookings create appointment records and reminder jobs.
+- Cancellation updates the appointment and cancels pending reminder jobs.
+- A scheduled Netlify Function processes due reminders every 15 minutes.
+- Email and WhatsApp reminder paths support Spanish and English templates.
+- Reminder failures are recorded and can retry up to three times.
+- The private operations spreadsheet already exists; its identifier and credentials are intentionally omitted here.
 
-Pending API:
+## WhatsApp implementation
 
-- Google Sheets API. The Google Cloud console currently returns **Site Unavailable** in the controlled cloud browser and has not been enabled or reported as enabled.
+The code in `netlify/functions/whatsapp.js` provides:
 
-OAuth branding configured:
+- Spanish as the initial language.
+- Switching with `English` or `Español`.
+- The same core menu as the web chatbot: book, view bookings, cancel and ask a question.
+- Netlify Blobs session storage.
+- HMAC-derived session keys that do not expose phone numbers.
+- Meta `X-Hub-Signature-256` validation that fails closed.
+- Base64 webhook payload support.
+- 24-hour message deduplication and session expiry.
+- Processing/ready/sent states to reduce duplicate bookings and lost replies.
+- An 8-second outbound Meta timeout.
+- Meta API version fallback `v23.0`.
 
-- App name: **Deep Finance Lab Appointment Assistant**
-- Support/developer email: `rmunozr@gmail.com`
-- Audience: External
-- Status: Testing
-- Homepage: `https://deepfinancelab.com`
-- Privacy: `https://deepfinancelab.com/privacy.html`
-- Terms: `https://deepfinancelab.com/terms.html`
-- Authorized domain: `deepfinancelab.com`
+### WhatsApp connectivity status
 
-## Exact resume point
+- The webhook is deployed at `https://deepfinancelab.com/.netlify/functions/whatsapp`.
+- It currently returns HTTP 503 `Webhook not configured` because the required Meta variables have not been completed in production.
+- The webhook has not yet been registered and verified in Meta.
+- No real inbound/outbound WhatsApp end-to-end test has been completed.
+- The previously proposed personal mobile number is used by normal WhatsApp. An exclusive Cloud API number or an explicitly planned migration is required.
 
-Open the Google Cloud project `deep-finance-lab-chatbot`, enable **Google Sheets API**, then prepare an OAuth authorization that includes the Sheets scope. Stop for immediate confirmation before enabling the API, changing OAuth permissions or creating a persistent refresh token. Do not publish the OAuth application yet.
+Required WhatsApp variables:
 
-## Remaining work
+- `WHATSAPP_ACCESS_TOKEN`
+- `WHATSAPP_PHONE_NUMBER_ID`
+- `WHATSAPP_APP_SECRET`
+- `WHATSAPP_VERIFY_TOKEN`
+- `WHATSAPP_API_VERSION`
+- Approved confirmation and reminder template names/languages as applicable.
 
-1. Confirm the required OAuth test users are present.
-2. Enable Google Sheets API and configure least-privilege scopes:
-   - `https://www.googleapis.com/auth/calendar.events`
-   - `https://www.googleapis.com/auth/calendar.freebusy`
-   - `https://www.googleapis.com/auth/gmail.send`
-   - `https://www.googleapis.com/auth/spreadsheets`
-3. Generate a Sheets-capable refresh token only after immediate authorization and store it as `GOOGLE_SHEETS_REFRESH_TOKEN`.
-4. Retain the already configured Calendar and Gmail authorizations as:
-   - `GOOGLE_CALENDAR_REFRESH_TOKEN`
-   - `GOOGLE_GMAIL_REFRESH_TOKEN`
-5. Configure Meta WhatsApp Cloud API, approved templates and the remaining Netlify secrets. On 7 September 2026, the existing Meta business portfolio `Antonio Arroyo` (ID intentionally omitted here) was renamed to **Deep Finance Lab** after explicit authorization. It already owns two WhatsApp Business accounts named `Nacional Libertario` and `Antonio Arroyo`; neither WABA was renamed or otherwise modified. Meta phone-number setup remains blocked by the Account Center security restriction previously shown.
-6. Recheck the HTTP 502 paths after all external variables are present.
-7. Request immediate confirmation, then push local commits `520ba41` and `20ceefa` to `master`; this may trigger Netlify deployment.
-8. Verify the Netlify deployment and run an end-to-end test: identification → live availability → booking → Sheets record → Calendar event → email/WhatsApp reminders → cancellation.
-9. Move OAuth out of Testing for permanent refresh-token operation and complete any Google verification requirements.
+## Next safe resume point
 
-## Git and deployment state
+1. Obtain or select a phone number dedicated to WhatsApp Cloud API, or explicitly approve a migration plan.
+2. Immediately before changing external systems, request confirmation from the user.
+3. Enter the Meta values directly in Netlify without exposing them in chat or GitHub.
+4. Register the callback URL and verify token in Meta.
+5. Subscribe the WhatsApp Business Account to message events.
+6. Run an end-to-end test: inbound message → bilingual menu → availability → booking → Calendar/Sheets → email/WhatsApp confirmation → lookup → cancellation → reminders.
+7. Verify logs and confirm that retries do not create duplicate appointments.
 
-- Local commits prepared: `520ba41` and `20ceefa`.
-- The local working tree was clean before this checkpoint update.
-- The remote repository still contains the older published version; neither local commit has been pushed.
-- No Netlify deployment, Meta webhook registration, credential creation or permission change was performed after the latest explicit restriction.
+## Security and authorization rules
 
-## Security note
+- Never display, reconstruct or commit secret values.
+- Do not read existing secret values unless strictly necessary.
+- Do not create credentials, permanent access, deploy keys or permission changes without immediate authorization.
+- Do not register the Meta webhook or modify Netlify production variables without immediate authorization.
+- Temporary deploy keys used during earlier work were removed.
+- Temporary GitHub publication branches were intentionally left in place because deletion was not authorized.
+- Previously exposed Google OAuth credentials/tokens must be rotated before final production use.
+- The previously exposed xAI credential should also be rotated.
 
-The xAI key and Google OAuth secrets/tokens appeared previously in conversation captures. Their values are intentionally omitted from this checkpoint. Rotate the xAI key and the exposed Google OAuth credentials before production.
+## Repository note
+
+- The authoritative published state is GitHub `master` at `521c8d1` or its successor.
+- The local scratch repository may have branches that diverge from remote history because publication was completed through the authenticated GitHub web interface.
+- Before future work, fetch `origin/master` and base new changes on the current remote branch; do not force-push or overwrite history.
+- This scratch directory is temporary. GitHub is the durable source of the deployed code.
