@@ -389,6 +389,67 @@
     .popup-message.show {
         opacity: 1;
     }
+
+    /* Embedded scheduling assistant — demo UI */
+    .chat-launcher {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 58px;
+      height: 58px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 1.45rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+      z-index: 3500;
+      transition: var(--transition);
+    }
+
+    .chat-launcher:hover { transform: translateY(-2px) scale(1.03); }
+
+    .chat-panel {
+      position: fixed;
+      right: 24px;
+      bottom: 94px;
+      width: min(390px, calc(100vw - 32px));
+      height: min(610px, calc(100vh - 120px));
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #d9e1e6;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, .24);
+      z-index: 3499;
+    }
+
+    .chat-panel.open { display: flex; }
+    .chat-header { padding: 1rem; background: #111; color: #fff; display: flex; align-items: center; gap: .75rem; }
+    .chat-status { width: 10px; height: 10px; border-radius: 50%; background: #35c759; box-shadow: 0 0 0 3px rgba(53,199,89,.18); }
+    .chat-header-copy { flex: 1; }
+    .chat-header-copy strong, .chat-header-copy span { display: block; }
+    .chat-header-copy span { margin-top: .12rem; color: #cdd4d8; font-size: .78rem; }
+    .chat-close { border: 0; background: transparent; color: #fff; font-size: 1.35rem; cursor: pointer; }
+    .chat-demo-label { padding: .45rem .8rem; background: #eef8fc; color: #16637c; font-size: .74rem; text-align: center; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; background: #f5f7f8; }
+    .chat-row { display: flex; margin-bottom: .75rem; }
+    .chat-row.user { justify-content: flex-end; }
+    .chat-bubble { max-width: 84%; padding: .7rem .85rem; border-radius: 14px 14px 14px 4px; background: #fff; color: #222; line-height: 1.42; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .chat-row.user .chat-bubble { border-radius: 14px 14px 4px 14px; background: var(--primary); color: #fff; }
+    .chat-options { display: flex; flex-wrap: wrap; gap: .5rem; margin: .25rem 0 .85rem; }
+    .chat-option { border: 1px solid var(--primary); border-radius: 999px; padding: .5rem .72rem; background: #fff; color: #08759d; cursor: pointer; font: inherit; font-size: .85rem; }
+    .chat-option:hover { background: #eaf7fb; }
+    .chat-input-area { display: flex; gap: .5rem; padding: .75rem; border-top: 1px solid #e4e8ea; background: #fff; }
+    .chat-input { flex: 1; min-width: 0; padding: .7rem .8rem; border: 1px solid #ccd5da; border-radius: 12px; font: inherit; }
+    .chat-send { border: 0; border-radius: 12px; padding: 0 .9rem; background: var(--primary); color: #fff; cursor: pointer; font-weight: 700; }
+
+    @media (max-width: 520px) {
+      .chat-launcher { right: 16px; bottom: 16px; }
+      .chat-panel { right: 16px; bottom: 86px; height: min(620px, calc(100vh - 105px)); }
+    }
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
@@ -405,6 +466,7 @@
     <a href="#industrias">Industries</a>
     <a href="#skills">Skills</a>
     <a class="active" href="#contacto">Contact</a>
+    <a href="index.es.html" lang="es" aria-label="Ver sitio en español">Español</a>
   </nav>
 
   <section class="hero">
@@ -671,6 +733,24 @@
       </form>
     </div>
   </section>
+
+  <button hidden class="chat-launcher" id="chatLauncher" type="button" aria-label="Open scheduling assistant" aria-expanded="false">&#128172;</button>
+  <aside hidden class="chat-panel" id="chatPanel" aria-label="Deep Finance Lab scheduling assistant" aria-hidden="true">
+    <div class="chat-header">
+      <span class="chat-status" aria-hidden="true"></span>
+      <div class="chat-header-copy">
+        <strong>Deep Finance Assistant</strong>
+        <span>Appointments and enquiries</span>
+      </div>
+      <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">&times;</button>
+    </div>
+    <div class="chat-demo-label" id="chatModeLabel">Interactive demo — no real appointment is created</div>
+    <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+    <form class="chat-input-area" id="chatForm">
+      <input class="chat-input" id="chatInput" type="text" autocomplete="off" placeholder="Type your message..." aria-label="Message">
+      <button class="chat-send" type="submit" aria-label="Send message">Send</button>
+    </form>
+  </aside>
 <script>
   const skillData = {
     "Fundamental Analysis": {
@@ -1035,5 +1115,241 @@
     }
   });
 </script>
+<script>
+  (() => {
+    return; // Replaced by the shared bilingual component.
+    const launcher = document.getElementById('chatLauncher');
+    const panel = document.getElementById('chatPanel');
+    const close = document.getElementById('chatClose');
+    const modeLabel = document.getElementById('chatModeLabel');
+    const messages = document.getElementById('chatMessages');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('chatInput');
+    let started = false;
+    let flow = 'menu';
+    let serverConfig = null;
+    const booking = {};
+
+    const professionals = {
+      'Strategic Finance': ['Professional 1', 'Professional 2'],
+      'Quantitative Analytics': ['Professional 1', 'Professional 3'],
+      'AI Advisory': ['Professional 2', 'Professional 4']
+    };
+
+    async function api(payload) {
+      const response = await fetch('/.netlify/functions/chatbot', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'REQUEST_FAILED');
+      return data;
+    }
+
+    function formatSlot(iso) {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Santiago', weekday: 'short', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }).format(new Date(iso));
+    }
+
+    function addMessage(text, who = 'bot') {
+      const row = document.createElement('div');
+      row.className = `chat-row ${who}`;
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble';
+      bubble.textContent = text;
+      row.appendChild(bubble);
+      messages.appendChild(row);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addOptions(items, handler, valueFor = value => value) {
+      const box = document.createElement('div');
+      box.className = 'chat-options';
+      items.forEach(label => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'chat-option';
+        button.textContent = label;
+        button.addEventListener('click', () => {
+          box.remove();
+          addMessage(label, 'user');
+          handler(valueFor(label));
+        });
+        box.appendChild(button);
+      });
+      messages.appendChild(box);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function showMenu() {
+      flow = 'menu';
+      addMessage('How can I help you today?');
+      addOptions(['Book a meeting', 'Cancel a booking', 'Ask a question'], handleMenu);
+    }
+
+    function handleMenu(choice) {
+      if (choice === 'Book a meeting') {
+        flow = 'service';
+        addMessage('Choose the type of meeting:');
+        addOptions(Object.keys(professionals), selectService);
+      } else if (choice === 'Cancel a booking') {
+        flow = 'cancel-professional';
+        addMessage('First select the professional associated with the booking:');
+        addOptions(['Professional 1', 'Professional 2', 'Professional 3', 'Professional 4'], selectCancelProfessional);
+      } else {
+        flow = 'question';
+        addMessage('Tell me what you would like to know about our financial and AI services.');
+      }
+    }
+
+    function selectService(service) {
+      booking.service = service;
+      flow = 'professional';
+      addMessage('Select a professional:');
+      addOptions(professionals[service], selectProfessional);
+    }
+
+    async function selectProfessional(professional) {
+      booking.professional = professional;
+      flow = 'slot';
+      addMessage(`Checking availability for ${professional}...`);
+      try {
+        const timeMin = new Date().toISOString();
+        const timeMax = new Date(Date.now() + 21 * 86400000).toISOString();
+        const result = await api({ action: 'availability', professional, timeMin, timeMax });
+        if (!result.slots.length) {
+          addMessage('No available times were found in the next three weeks.');
+          return showMenu();
+        }
+        const labels = result.slots.map(formatSlot);
+        const slotMap = Object.fromEntries(labels.map((label, index) => [label, result.slots[index]]));
+        addMessage(`Available times with ${professional}:`);
+        addOptions(labels, selectSlot, label => slotMap[label]);
+      } catch (error) {
+        addMessage('The calendar service is temporarily unavailable. Please try again later.');
+        showMenu();
+      }
+    }
+
+    function selectSlot(slot) {
+      booking.slot = slot;
+      flow = 'name';
+      addMessage('Please type your full name.');
+    }
+
+    function selectCancelProfessional(professional) {
+      booking.cancelProfessional = professional;
+      flow = 'cancel-code';
+      addMessage('Type the booking reference included in your confirmation message.');
+    }
+
+    async function confirmBooking(choice) {
+      if (choice !== 'Confirm booking') return showMenu();
+      addMessage('Processing the booking...');
+      try {
+        const result = await api({
+          action: 'book', service: booking.service, professional: booking.professional,
+          start: booking.slot, name: booking.name, email: booking.email, phone: booking.phone
+        });
+        addMessage(`${result.demo ? 'Demo booking created' : 'Appointment confirmed'}. Reference: ${result.reference}.`);
+        if (result.demo) addMessage('No real calendar event, email or WhatsApp message was created because the server is in demo mode.');
+      } catch (error) {
+        addMessage(error.message === 'SLOT_UNAVAILABLE' ? 'That time was just taken. Please choose another.' : 'The booking could not be completed.');
+      }
+      showMenu();
+    }
+
+    async function confirmCancellation(choice) {
+      if (choice !== 'Confirm cancellation') return showMenu();
+      addMessage('Processing the cancellation...');
+      try {
+        const result = await api({ action: 'cancel', professional: booking.cancelProfessional, reference: booking.cancelReference });
+        addMessage(`${result.demo ? 'Demo cancellation completed' : 'Appointment cancelled'}. Reference: ${result.reference}.`);
+      } catch (error) {
+        addMessage(error.message === 'BOOKING_NOT_FOUND' ? 'No booking was found with that reference.' : 'The cancellation could not be completed.');
+      }
+      showMenu();
+    }
+
+    async function handleText(value) {
+      if (flow === 'name') {
+        booking.name = value;
+        flow = 'email';
+        addMessage('Type the email address that should receive the confirmation.');
+      } else if (flow === 'email') {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return addMessage('Please enter a valid email address.');
+        booking.email = value;
+        flow = 'phone';
+        addMessage('Type the WhatsApp number in international format (for example +56912345678), or type Skip.');
+      } else if (flow === 'phone') {
+        if (value.toLowerCase() !== 'skip' && !/^\+[1-9]\d{7,14}$/.test(value.replace(/\s/g, ''))) return addMessage('Use international format beginning with +, or type Skip.');
+        booking.phone = value.toLowerCase() === 'skip' ? '' : value.replace(/\s/g, '');
+        flow = 'confirm-booking';
+        addMessage(`Please confirm: ${booking.service}, ${booking.professional}, ${formatSlot(booking.slot)}, for ${booking.name}.`);
+        addOptions(['Confirm booking', 'Start over'], confirmBooking);
+      } else if (flow === 'cancel-code') {
+        const reference = value.trim().toUpperCase();
+        if (!/^DFL-[A-F0-9]{32}$/.test(reference)) return addMessage('Enter the complete reference included in your confirmation message.');
+        booking.cancelReference = reference;
+        flow = 'confirm-cancel';
+        addMessage(`Cancelling ${reference} will remove the appointment. Do you want to continue?`);
+        addOptions(['Confirm cancellation', 'Keep appointment'], confirmCancellation);
+      } else if (flow === 'question') {
+        addMessage('Thinking...');
+        try {
+          const result = await api({ action: 'ask', question: value });
+          addMessage(result.text);
+        } catch (error) {
+          addMessage('I could not answer that question right now. Please try again later.');
+        }
+        showMenu();
+      } else {
+        addMessage('Please choose one of the available options.');
+        showMenu();
+      }
+    }
+
+    async function openChat() {
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+      launcher.setAttribute('aria-expanded', 'true');
+      if (!started) {
+        started = true;
+        try {
+          serverConfig = await api({ action: 'bootstrap' });
+          if (!serverConfig.demo) modeLabel.remove();
+          addMessage(`Hello! I am the Deep Finance Lab assistant. ${serverConfig.demo ? 'The scheduling system is currently in demo mode.' : 'I can manage appointments across four professional calendars.'}`);
+        } catch (error) {
+          addMessage('Hello! The scheduling service is temporarily unavailable, but you can still explore the assistant.');
+        }
+        showMenu();
+      }
+      input.focus();
+    }
+
+    function closeChat() {
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+      launcher.setAttribute('aria-expanded', 'false');
+      launcher.focus();
+    }
+
+    launcher.addEventListener('click', () => panel.classList.contains('open') ? closeChat() : openChat());
+    close.addEventListener('click', closeChat);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && panel.classList.contains('open')) closeChat(); });
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = input.value.trim();
+      if (!value) return;
+      input.value = '';
+      addMessage(value, 'user');
+      handleText(value);
+    });
+  })();
+</script>
+<script src="chatbot-es.js" defer></script>
 </body>
 </html>
