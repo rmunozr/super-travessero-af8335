@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Deep Finance Lab | Raúl Muñoz R.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0093c9;
+      --dark: #111111;
+      --light: #f8f9fa;
+      --gray: #444444;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #ffffff;
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Navbar Premium */
+    .navbar {
+      background-color: var(--dark);
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1.25rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: var(--transition);
+      position: relative;
+    }
+    
+    .navbar a:hover {
+      color: var(--primary);
+    }
+    
+    .navbar a.active {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 8px rgba(0, 147, 201, 0.3); /* Sombra para el activo */
+    }
+    
+    .navbar a.active:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 147, 201, 0.4); /* Sombra más pronunciada al hover en activo */
+    }
+    
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .hero-image {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transition: var(--transition);
+    }
+    
+    .hero-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+      /* Degradado con brillo blanco central y animación */
+      background: linear-gradient(90deg, var(--dark) 20%, #ffffffaa 50%, var(--primary) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: shine 5s linear infinite alternate; /* Duración cambiada a 5s para más lentitud */
+    }
+
+    @keyframes shine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    
+    h2 {
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      font-weight: 400;
+      color: var(--gray);
+      margin-bottom: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Button Styles */
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--dark);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button:hover {
+      background-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Contact Form Button specifics */
+    .button.contact-submit-btn {
+      min-width: 150px; /* Para que el texto "Enviando..." no haga saltar el botón */
+      text-align: center;
+    }
+    
+    /* Section Styles */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      margin: 0.5rem auto;
+      border-radius: 2px;
+    }
+    
+    /* Card Styles */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      cursor: pointer; /* Añadido para indicar que es clickeable */
+      display: flex; /* Para alinear el icono y el h3 */
+      flex-direction: column;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border-color: var(--primary);
+    }
+    
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      display: flex; /* Para el ícono dentro del h3 */
+      align-items: center;
+      gap: 0.75rem; /* Espacio entre icono y texto */
+    }
+
+    /* SVG icons within h3 were removed, so this rule is not strictly needed for rendering,
+       but kept for completeness if you decide to add icons back. */
+    .card h3 svg {
+        width: 1.5em; /* Tamaño del icono */
+        height: 1.5em;
+        min-width: 1.5em; /* Asegurar que no se reduzca */
+        fill: var(--primary);
+    }
+
+    .card p {
+      text-align: justify; /* Agregado */
+      margin-bottom: 0.5rem; /* Agregado para espacio entre párrafos en cards */
+    }
+    
+    /* Industry Applications (now using .card styles) */
+    /* No specific styles needed for .industry-grid as it now uses .card-grid */
+    /* Removed .industry-card, .industry-icon, .industry-stat as they are no longer used */
+    
+    /* About Section */
+    .about-text { /* Nueva clase */
+      text-align: justify;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Skills Section */
+    .skills-section {
+      margin-bottom: 3rem;
+    }
+
+    .skill-category {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid rgba(0, 147, 201, 0.2);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .skill-chip {
+      background: rgba(0, 147, 201, 0.08);
+      color: var(--primary);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 147, 201, 0.2);
+      cursor: pointer; /* Agregado para indicar que es clickeable */
+    }
+
+    .skill-chip:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 147, 201, 0.2);
+    }
+
+    /* Info Modal (unified for skills and industry/offer cards) */
+    .info-modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      top: 0;
+      left: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      background-color: rgba(0, 0, 0, 0.7); /* Black w/ opacity */
+      z-index: 2000; /* Sit on top */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 90%;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border-top: 4px solid var(--primary); /* Estilo distintivo */
+    }
+    
+    .modal-title {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    
+    .modal-example { /* Reutilizado para Casos de Uso y ejemplos de skills */
+      background-color: rgba(0, 147, 201, 0.05); /* Fondo suave */
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 3px solid var(--primary); /* Borde para destacar */
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: var(--transition);
+    }
+    
+    .close-modal:hover {
+      color: var(--primary);
+      transform: rotate(90deg);
+    }
+
+    /* Form Input Focus */
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 147, 201, 0.25);
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .navbar {
+        gap: 0.5rem;
+        padding: 1rem;
+      }
+      
+      .hero {
+        padding: 3rem 1rem;
+      }
+      
+      .section {
+        padding: 3rem 1rem;
+      }
+      
+      .skills-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      
+      /* .industry-grid was removed in favor of .card-grid for consistency */
+    }
+
+    /* Styles for the pop-up messages */
+    .popup-message {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: white;
+        text-align: center;
+        z-index: 3000; /* Higher than modal */
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup-success {
+        background-color: #28a745; /* Green */
+    }
+
+    .popup-error {
+        background-color: #dc3545; /* Red */
+    }
+
+    .popup-message.show {
+        opacity: 1;
+    }
+
+    /* Embedded scheduling assistant — demo UI */
+    .chat-launcher {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 58px;
+      height: 58px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 1.45rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+      z-index: 3500;
+      transition: var(--transition);
+    }
+
+    .chat-launcher:hover { transform: translateY(-2px) scale(1.03); }
+
+    .chat-panel {
+      position: fixed;
+      right: 24px;
+      bottom: 94px;
+      width: min(390px, calc(100vw - 32px));
+      height: min(610px, calc(100vh - 120px));
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #d9e1e6;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, .24);
+      z-index: 3499;
+    }
+
+    .chat-panel.open { display: flex; }
+    .chat-header { padding: 1rem; background: #111; color: #fff; display: flex; align-items: center; gap: .75rem; }
+    .chat-status { width: 10px; height: 10px; border-radius: 50%; background: #35c759; box-shadow: 0 0 0 3px rgba(53,199,89,.18); }
+    .chat-header-copy { flex: 1; }
+    .chat-header-copy strong, .chat-header-copy span { display: block; }
+    .chat-header-copy span { margin-top: .12rem; color: #cdd4d8; font-size: .78rem; }
+    .chat-close { border: 0; background: transparent; color: #fff; font-size: 1.35rem; cursor: pointer; }
+    .chat-demo-label { padding: .45rem .8rem; background: #eef8fc; color: #16637c; font-size: .74rem; text-align: center; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 1rem; background: #f5f7f8; }
+    .chat-row { display: flex; margin-bottom: .75rem; }
+    .chat-row.user { justify-content: flex-end; }
+    .chat-bubble { max-width: 84%; padding: .7rem .85rem; border-radius: 14px 14px 14px 4px; background: #fff; color: #222; line-height: 1.42; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .chat-row.user .chat-bubble { border-radius: 14px 14px 4px 14px; background: var(--primary); color: #fff; }
+    .chat-options { display: flex; flex-wrap: wrap; gap: .5rem; margin: .25rem 0 .85rem; }
+    .chat-option { border: 1px solid var(--primary); border-radius: 999px; padding: .5rem .72rem; background: #fff; color: #08759d; cursor: pointer; font: inherit; font-size: .85rem; }
+    .chat-option:hover { background: #eaf7fb; }
+    .chat-input-area { display: flex; gap: .5rem; padding: .75rem; border-top: 1px solid #e4e8ea; background: #fff; }
+    .chat-input { flex: 1; min-width: 0; padding: .7rem .8rem; border: 1px solid #ccd5da; border-radius: 12px; font: inherit; }
+    .chat-send { border: 0; border-radius: 12px; padding: 0 .9rem; background: var(--primary); color: #fff; cursor: pointer; font-weight: 700; }
+
+    @media (max-width: 520px) {
+      .chat-launcher { right: 16px; bottom: 16px; }
+      .chat-panel { right: 16px; bottom: 86px; height: min(620px, calc(100vh - 105px)); }
+    }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-XXXXXXXXXX'); // Reemplaza 'G-XXXXXXXXXX' con tu ID de Medición de GA4
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="#oferta">Services</a>
+    <a href="#industrias">Industries</a>
+    <a href="#skills">Skills</a>
+    <a class="active" href="#contacto">Contact</a>
+    <a href="index.es.html" lang="es" aria-label="Ver sitio en español">Español</a>
+  </nav>
+
+  <section class="hero">
+    <img src="DFL.jpeg" alt="Deep Finance Lab Logo" class="hero-image" loading="lazy">
+    <h1>Deep Finance Lab</h1>
+    <h2>Capital Markets | Quantitative Finance | Generative AI</h2>
+    <a class="button" href="https://www.linkedin.com/in/ra%C3%BAl-mu%C3%B1oz-6793161b" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 3C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19ZM18.5 18.5V13.2C18.5 12.3354 18.1565 11.5062 17.5452 10.8948C16.9338 10.2835 16.1046 9.94 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17C14.6813 12.17 15.0374 12.3175 15.2999 12.5801C15.5625 12.8426 15.71 13.1987 15.71 13.57V18.5H18.5ZM6.88 8.56C7.32556 8.56 7.75288 8.383 8.06794 8.06794C8.383 7.75288 8.56 7.32556 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19C6.43178 5.19 6.00193 5.36805 5.68499 5.68499C5.36805 6.00193 5.19 6.43178 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56ZM8.27 18.5V10.13H5.5V18.5H8.27Z" fill="currentColor"/>
+      </svg>
+      View LinkedIn Profile
+    </a>
+  </section>
+
+  <section id="oferta" class="section">
+    <h2 class="section-title">Value Proposition</h2>
+    <p style="max-width: 700px; margin: 0 auto 2rem; text-align: center;">
+      I integrate Artificial Intelligence with Capital Markets strategies to design robust and automated financial solutions.
+    </p>
+    
+    <div class="card-grid">
+      <div class="card" id="riesgo" data-title="Risk Modeling" data-use-cases="Portfolio assessment for bank loans.|Default forecasting for corporate bonds.|Fraud detection in financial transactions.|Counterparty risk evaluation.|Credit spread prediction.|Behavioral default models.|Sectoral contagion analysis.">
+        <h3>
+          Risk Modeling
+        </h3>
+        <p>I develop statistical and machine learning models to estimate default probabilities in debt instruments and corporate credit. I use advanced techniques such as survival analysis, competing risks, and deep neural networks tailored to financial contexts. I incorporate correlations between obligors and systemic risk factors.</p>
+      </div>
+      
+      <div class="card" id="trading" data-title="Algorithmic Trading" data-use-cases="Implementation of low-latency arbitrage strategies.|Automated market-making systems for commodities.|Signal generation from alternative data.|Price prediction using machine learning.|Execution optimization algorithms.|Multi-asset portfolio rebalancing systems.|Volatility prediction models.">
+        <h3>
+          Algorithmic Trading
+        </h3>
+        <p>I build automated decision-making systems using technical signals, time series analysis, and backtesting with real data. I implement strategies based on machine learning for market microstructure, momentum, mean reversion, and statistical arbitrage. I design robust systems resistant to overfitting and real-world market friction.</p>
+      </div>
+      
+      <div class="card" id="portafolios" data-title="Portfolio Optimization" data-use-cases="Construction of efficient portfolios for investment funds.|Optimization of asset allocation under risk constraints.|Multi-objective optimization with ESG factors.|Strategic asset allocation for pension funds.|Factor-based portfolio construction.|Rebalancing optimization with transaction costs.|Liability-driven investment strategies.">
+        <h3>
+          Portfolio Optimization
+        </h3>
+        <p>I apply techniques such as convex optimization and evolutionary methods to structure efficient portfolios under real constraints. I develop models that consider dynamic correlations, tail risks (CVaR), and multiple objectives. I implement algorithms for rebalancing, replication, and stress testing portfolios.</p>
+      </div>
+      
+      <div class="card" id="nlp" data-title="Natural Language Processing" data-use-cases="Sentiment analysis of financial news for trading.|Extraction of key information from earnings reports.|Automatic summarization of investor presentations.|Financial document classification.|Red flag detection in regulatory filings.|Analysis of central bank communications.|Extraction of risk factors from 10-K reports.">
+        <h3>
+          Natural Language Processing
+        </h3>
+        <p>I use NLP and transformers to extract economic signals from unstructured text such as news and reports. I implement sentiment analysis models specific to the financial domain. I develop systems for entity extraction, topic modeling, and causal relationship inference from financial texts.</p>
+      </div>
+      
+      <div class="card" id="anomalías" data-title="Anomaly Detection" data-use-cases="Identification of fraudulent transactions in real-time.|Detection of market manipulation.|Unusual trading activity identification.|Outlier detection in market microstructure data.|Unusual corporate action detection.|Suspicious fund flow identification.|Network-based fraud detection.">
+        <h3>
+          Anomaly Detection
+        </h3>
+        <p>Algorithms to identify atypical behaviors in financial data flows with advanced techniques. I combine traditional statistical methods with autoencoders and GANs for detecting complex patterns. I implement real-time monitoring systems for fraud, compliance, and market surveillance.</p>
+      </div>
+      
+      <div class="card" id="stress" data-title="Scenario Simulation" data-use-cases="Stress testing of investment portfolios during economic crisis.|Simulation of impacts from regulatory changes.|Historical scenario replay analysis.|Reverse stress testing for risk management.|Monte Carlo simulation of catastrophic events.|Pandemic and geopolitical shock analysis.|Credit contagion cascade modeling.">
+        <h3>
+          Scenario Simulation
+        </h3>
+        <p>I simulate adverse conditions for portfolios using Monte Carlo, Bayesian networks, and generative models. I develop personalized stress tests that incorporate macroeconomic shocks, tail correlations, and factor extremes. I create scenario analysis frameworks for regulatory capital requirements.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="industrias" class="section" style="background: #f8f9fa;">
+    <h2 class="section-title">Applications in Other Industries</h2>
+    <p style="max-width: 700px; margin: 0 auto 2rem; text-align: center;">
+      Our adapted financial models generate disruptive efficiencies across various sectors:
+    </p>
+    
+    <div class="card-grid">
+      <div class="card" data-title="Healthcare" data-use-cases="Early disease diagnosis through image analysis.|Optimization of medical appointment scheduling.|Prediction of patient readmission risk.|Detection of abnormal medical patterns.|Hospital resource allocation optimization.|Pharmaceutical trial outcome prediction.|Epidemic spread forecasting.">
+        <h3>
+          Healthcare
+        </h3>
+        <p>Automated diagnostics through predictive models adapted from credit risk analysis, identifying complex patterns in medical images and clinical data. Medical imaging interpretation and early disease detection using deep learning. Optimization of clinical workflows and resource allocation.</p>
+      </div>
+      
+      <div class="card" data-title="Human Resources" data-use-cases="Prediction of employee turnover.|Optimization of personnel assignment to projects.|Sentiment analysis in employee surveys.|Skills gap identification and planning.|Compensation optimization.|Performance prediction and development planning.|Recruitment process improvement.">
+        <h3>
+          Human Resources
+        </h3>
+        <p>Application of predictive and data analysis models to optimize talent management, improve employee retention, and automate selection processes. Use of natural language processing to analyze employee feedback and engagement. Workforce planning based on behavioral prediction models.</p>
+      </div>
+
+      <div class="card" data-title="Psychology" data-use-cases="Modeling of decision-making under uncertainty.|Analysis of cognitive biases in economic contexts.|Prediction of behavioral patterns in market situations.|Analysis of risk preferences and loss aversion.|Modeling of choice architecture effects.|Behavioral intervention design.|Psychological profiling for financial behavior.">
+        <h3>
+          Psychology
+        </h3>
+        <p>Integration of behavioral economics principles and quantitative models to understand and predict human behavior in financial and market environments. Development of heuristics and bias detection systems. Behavioral simulation frameworks for understanding decision-making.</p>
+      </div>
+
+      <div class="card" data-title="Law" data-use-cases="Analysis of contracts and legal documents to identify key clauses.|Prediction of judicial outcomes based on historical data.|Automated document review and due diligence.|Legal research and precedent analysis.|Contract risk assessment.|Regulatory compliance monitoring.|Litigation prediction models.">
+        <h3>
+          Law
+        </h3>
+        <p>Application of natural language processing and machine learning to analyze large volumes of legal text, assist in legal research, and support document drafting. Automation of contract analysis and risk identification. Predictive models for litigation outcomes and regulatory compliance.</p>
+      </div>
+
+      <div class="card" data-title="Education" data-use-cases="Prediction of student academic performance.|Personalization of adaptive learning pathways.|Analysis of large educational datasets.|Early intervention identification for at-risk students.|Curriculum optimization.|Learning outcome prediction.|Educational resource allocation.">
+        <h3>
+          Education
+        </h3>
+        <p>Use of data analysis and machine learning to improve learning experience, optimize educational management, and personalize teaching. Implementation of early warning systems for student success. Development of adaptive learning platforms based on predictive models.</p>
+      </div>
+      
+      <div class="card" data-title="Logistics" data-use-cases="Optimization of delivery routes for truck fleets.|Demand forecasting for inventory management.|Vehicle assignment and scheduling optimization.|Supply chain risk prediction.|Warehouse location optimization.|Dynamic pricing for logistics services.|Network design optimization.">
+        <h3>
+          Logistics
+        </h3>
+        <p>Intelligent routing based on efficient portfolio theory, optimizing transport fleets as if they were financial assets. Predictive demand models adapted from time series analysis. Supply chain optimization using network theory and operations research.</p>
+      </div>
+      
+      <div class="card" data-title="Energy" data-use-cases="Prediction of energy prices in spot markets.|Optimization of generation in renewable energy plants.|Analysis of renewable energy variability.|Energy demand forecasting.|Grid stability prediction.|Smart grid optimization.|Carbon credit pricing models.">
+        <h3>
+          Energy
+        </h3>
+        <p>Spot price prediction with neural networks adapted from financial forecasting models. Generation optimization using stochastic models and Bayesian approaches. Integration of renewable sources through demand-supply balancing algorithms.</p>
+      </div>
+      
+      <div class="card" data-title="Retail" data-use-cases="Personalized product recommendation systems.|Optimization of dynamic pricing in online stores.|Analysis of customer purchase behavior.|Inventory optimization and demand forecasting.|Customer lifetime value prediction.|Churn prediction and retention strategies.|Basket analysis and cross-selling optimization.">
+        <h3>
+          Retail
+        </h3>
+        <p>Recommendation systems with financial embeddings repurposed for purchase behavior analysis. Demand forecasting using multivariate time series and generative models. Personalization engines based on customer segmentation and neural collaborative filtering.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre-mi" class="section">
+    <div style="max-width: 700px; margin: 0 auto;">
+      <h2 class="section-title">About Me</h2>
+      <p class="about-text"> I am an <strong>expert in Capital Markets, Finance and Economics</strong>, with specialization in <strong>Applied Data Science and Artificial Intelligence</strong>.
+      </p>
+      <p class="about-text"> I combine traditional financial analysis tools with advanced AI techniques: from supervised <em>machine learning</em>, to probabilistic models, deep learning, and large language models. I apply these methodologies to solve complex problems in capital markets, quantitative finance, and emerging applications in other industries.
+      </p>
+    </div>
+  </section>
+
+  <section id="skills" class="section" style="background: #f8f9fa;">
+    <h2 class="section-title">Technical Skills</h2>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Capital Markets</h3>
+      <div class="skills-grid">
+        <span class="skill-chip" data-skill="Fundamental Analysis">Fundamental Analysis</span>
+        <span class="skill-chip" data-skill="Asset Valuation">Asset Valuation</span>
+        <span class="skill-chip" data-skill="Asset Allocation">Asset Allocation</span>
+        <span class="skill-chip" data-skill="Derivatives Pricing">Derivatives Pricing</span>
+        <span class="skill-chip" data-skill="Derivatives Trading">Derivatives Trading</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Derivatives & Trading</h3>
+      <div class="skills-grid">
+        <span class="skill-chip" data-skill="Options Pricing">Options Pricing</span>
+        <span class="skill-chip" data-skill="Volatility Arbitrage">Volatility Arbitrage</span>
+        <span class="skill-chip" data-skill="Exotic Derivatives">Exotic Derivatives</span>
+        <span class="skill-chip" data-skill="Algorithmic Trading">Algorithmic Trading</span>
+        <span class="skill-chip" data-skill="Quant Strategies">Quant Strategies</span>
+        <span class="skill-chip" data-skill="HFT Systems">HFT Systems</span>
+        <span class="skill-chip" data-skill="Risk Neutral Valuation">Risk Neutral Valuation</span>
+        <span class="skill-chip" data-skill="Stochastic Calculus">Stochastic Calculus</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Artificial Intelligence</h3>
+      <div class="skills-grid">
+        <span class="skill-chip" data-skill="Deep Learning">Deep Learning</span>
+        <span class="skill-chip" data-skill="Reinforcement Learning">Reinforcement Learning</span>
+        <span class="skill-chip" data-skill="Generative Models">Generative Models</span>
+        <span class="skill-chip" data-skill="Time Series Forecasting">Time Series Forecasting</span>
+        <span class="skill-chip" data-skill="Anomaly Detection">Anomaly Detection</span>
+        <span class="skill-chip" data-skill="Computer Vision">Computer Vision</span>
+        <span class="skill-chip" data-skill="Bayesian Networks">Bayesian Networks</span>
+        <span class="skill-chip" data-skill="Explainable AI">Explainable AI</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">LLMs & NLP</h3>
+      <div class="skills-grid">
+        <span class="skill-chip" data-skill="Transformer Architectures">Transformer Architectures</span>
+        <span class="skill-chip" data-skill="Fine-tuning LLMs">Fine-tuning LLMs</span>
+        <span class="skill-chip" data-skill="Financial Sentiment Analysis">Financial Sentiment Analysis</span>
+        <span class="skill-chip" data-skill="Prompt Engineering">Prompt Engineering</span>
+        <span class="skill-chip" data-skill="RAG Systems">RAG Systems</span>
+        <span class="skill-chip" data-skill="Earnings Call Analysis">Earnings Call Analysis</span>
+        <span class="skill-chip" data-skill="Document Intelligence">Document Intelligence</span>
+        <span class="skill-chip" data-skill="Multimodal AI">Multimodal AI</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Quantitative Finance</h3>
+      <div class="skills-grid">
+        <span class="skill-chip" data-skill="Portfolio Optimization">Portfolio Optimization</span>
+        <span class="skill-chip" data-skill="Monte Carlo Methods">Monte Carlo Methods</span>
+        <span class="skill-chip" data-skill="Risk Metrics (VaR/CVaR)">Risk Metrics (VaR/CVaR)</span>
+        <span class="skill-chip" data-skill="Factor Models">Factor Models</span>
+        <span class="skill-chip" data-skill="Stochastic Volatility">Stochastic Volatility</span>
+        <span class="skill-chip" data-skill="Fixed Income Modeling">Fixed Income Modeling</span>
+        <span class="skill-chip" data-skill="Credit Risk Modeling">Credit Risk Modeling</span>
+        <span class="skill-chip" data-skill="Market Microstructure">Market Microstructure</span>
+      </div>
+    </div>
+    
+    <div class="skills-section">
+      <h3 class="skill-category">Economics</h3>
+      <div class="skills-grid">
+        <span class="skill-chip" data-skill="Macro-Financial Models">Macro-Financial Models</span>
+        <span class="skill-chip" data-skill="Behavioral Economics">Behavioral Economics</span>
+        <span class="skill-chip" data-skill="Game Theory">Game Theory</span>
+        <span class="skill-chip" data-skill="Monetary Policy">Monetary Policy</span>
+        <span class="skill-chip" data-skill="Econometrics">Econometrics</span>
+        <span class="skill-chip" data-skill="DSGE Modeling">DSGE Modeling</span>
+        <span class="skill-chip" data-skill="Causal Inference">Causal Inference</span>
+        <span class="skill-chip" data-skill="Network Theory">Network Theory</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="info-modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <span class="close-modal" role="button" aria-label="Close">&times;</span>
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <div id="modalDescription"></div>
+      <div class="modal-example">
+        <strong id="exampleLabel">Applied example:</strong> <span id="modalExample"></span>
+        <strong id="useCasesLabel" style="display: none;">Use Cases:</strong>
+        <ul id="modalUseCases" style="list-style: disc; margin-left: 1.25rem; margin-top: 0.5rem;"></ul>
+      </div>
+    </div>
+  </div>
+  
+  <section id="contacto" class="section">
+    <div style="max-width: 600px; margin: 0 auto;">
+      <h2 class="section-title">Contact Me</h2>
+      <form action="https://formspree.io/f/manbokpo" id="contact-form" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Name</label>
+          <input id="name" name="name" required type="text" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; transition: var(--transition);">
+          <p class="error-message" id="name-error" style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem; display:none;"></p>
+        </div>
+        
+        <div>
+          <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email Address</label>
+          <input id="email" name="email" required type="email" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; transition: var(--transition);">
+          <p class="error-message" id="email-error" style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem; display:none;"></p>
+        </div>
+        
+        <div>
+          <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Message</label>
+          <textarea id="message" name="message" required rows="5" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; transition: var(--transition);"></textarea>
+          <p class="error-message" id="message-error" style="color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem; display:none;"></p>
+        </div>
+        
+        <button type="submit" class="button contact-submit-btn" style="align-self: flex-start;">Send Message</button>
+        
+        <div id="global-popup-message" class="popup-message"></div>
+      </form>
+    </div>
+  </section>
+
+  <button hidden class="chat-launcher" id="chatLauncher" type="button" aria-label="Open scheduling assistant" aria-expanded="false">&#128172;</button>
+  <aside hidden class="chat-panel" id="chatPanel" aria-label="Deep Finance Lab scheduling assistant" aria-hidden="true">
+    <div class="chat-header">
+      <span class="chat-status" aria-hidden="true"></span>
+      <div class="chat-header-copy">
+        <strong>Deep Finance Assistant</strong>
+        <span>Appointments and enquiries</span>
+      </div>
+      <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">&times;</button>
+    </div>
+    <div class="chat-demo-label" id="chatModeLabel">Interactive demo — no real appointment is created</div>
+    <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+    <form class="chat-input-area" id="chatForm">
+      <input class="chat-input" id="chatInput" type="text" autocomplete="off" placeholder="Type your message..." aria-label="Message">
+      <button class="chat-send" type="submit" aria-label="Send message">Send</button>
+    </form>
+  </aside>
+<script>
+  const skillData = {
+    "Fundamental Analysis": {
+      description: "Comprehensive company evaluation through financial statement analysis, business model assessment, competitive advantages and macroeconomic environment. Includes DCF models (discounted cash flow), multiples analysis, intrinsic valuation, and relative valuation frameworks.",
+      example: "Valuation of technology company using DCF with three scenarios (base, optimistic, pessimistic), analysis of comparable multiples (EV/EBITDA, P/E) and evaluation of the product pipeline with probability-weighted adjustments."
+    },
+    "Asset Valuation": {
+      description: "Methodologies to determine the intrinsic value of financial assets, including discounted cash flow models, relative valuation, real options, and hybrid models combining multiple approaches.",
+      example: "Startup valuation using real options method (Black-Scholes adapted) to capture the value of strategic flexibility in its international expansion plan."
+    },
+    "Asset Allocation": {
+      description: "Process of optimal capital distribution among different asset classes (stocks, bonds, alternatives) considering investment objectives, time horizon and risk tolerance.",
+      example: "Portfolio optimization for pension fund that maximizes expected return for a given risk level (CVaR), incorporating manager views through Black-Litterman model."
+    },
+    "Derivatives Pricing": {
+      description: "Mathematical modeling to determine theoretical prices of derivative instruments (options, futures, swaps) using analytical methods (Black-Scholes), numerical methods (binomial trees, finite differences) and Monte Carlo simulation.",
+      example: "Implementation of Heston model for European option pricing with stochastic volatility, calibrated with market implied volatility surface."
+    },
+    "Derivatives Trading": {
+      description: "Development and implementation of strategies using financial derivatives for directional positioning, risk hedging or arbitrage. Includes spreads, volatility strategies, and structured approaches.",
+      example: "Dispersion trading strategy that capitalizes on differences between implied volatility of index and realized volatility of its components, with delta-neutral hedging."
+    },
+    "Options Pricing": {
+      description: "Mathematical models to value financial options, considering underlying price, strike, time to expiration, interest rates, dividends and volatility. Includes binomial, trinomial, Monte Carlo and analytical approaches.",
+      example: "American binomial model to value options on dividend-paying stocks, with 1000 time steps for precision."
+    },
+    "Volatility Arbitrage": {
+      description: "Strategies seeking to exploit discrepancies between implied volatility (derivatives) and realized volatility (historical). Includes volatility spread trading, variance swaps and term structure arbitrage.",
+      example: "Implementation of short straddle strategy with dynamic hedging when implied volatility significantly exceeds realized historical volatility."
+    },
+    "Exotic Derivatives": {
+      description: "Valuation and trading of derivatives with non-standard features (barrier options, Asian options, lookbacks, etc.). Requires advanced numerical methods and understanding of path-dependent option characteristics.",
+      example: "Pricing of up-and-out barrier option using finite differences with specific boundary conditions and adjustment for observation discretionality."
+    },
+    "Algorithmic Trading": {
+      description: "Development of automated systems executing orders based on predefined rules, minimizing transaction costs and market impact. Includes VWAP, TWAP, implementation shortfall algorithms and portfolio rebalancing.",
+      example: "Execution algorithm that divides large order into child orders using intraday liquidity profile and market impact propagation model."
+    },
+    "Quant Strategies": {
+      description: "Systematic strategies based on quantitative models, including mean reversion, momentum, factor investing and machine learning. Rigorous backtesting and parameter optimization with robustness validation.",
+      example: "Long-short strategy based on quality factor (ROE, leverage, earnings stability) with sector neutralization and exposure control to other risk factors."
+    },
+    "HFT Systems": {
+      description: "High-frequency trading systems operating at millisecond to microsecond scales. Requires low-latency infrastructure, co-location and sophisticated market-making algorithms.",
+      example: "Electronic market maker for ETFs that adjusts bid-ask spreads in real-time based on implied volatility and order book depth."
+    },
+    "Risk Neutral Valuation": {
+      description: "Theoretical framework for valuing derivatives by assuming a risk-neutral world where expected return on all assets is the risk-free rate. Fundamental for derivative pricing and option valuation.",
+      example: "Swaption valuation using forward-neutral measure and Hull-White short-rate model in context of Fed policy expectations."
+    },
+    "Stochastic Calculus": {
+      description: "Mathematical tools for modeling random processes in continuous time, essential for derivatives and quantitative finance. Includes Brownian motion, Itô's lemma, SDEs and measure change.",
+      example: "Derivation of price process for Asian option using Itô's lemma and measure change for risk-neutral valuation."
+    },
+    "Deep Learning": {
+      description: "Neural networks with multiple layers for modeling complex relationships in financial data. Includes architectures like MLPs, CNNs for structured and sequential data, RNNs and attention mechanisms.",
+      example: "Deep neural network to predict anomalous returns based on 150 macroeconomic and market factors, with dropout and batch normalization."
+    },
+    "Reinforcement Learning": {
+      description: "Algorithms that learn optimal policies through interaction with simulated financial environment. Applications in algorithmic trading, execution optimization and portfolio management.",
+      example: "RL agent for portfolio management that learns optimal asset allocation strategy through Q-learning with reward function based on Sharpe ratio."
+    },
+    "Generative Models": {
+      description: "Models that learn distribution of financial data to generate realistic samples (GANs, VAEs, Diffusion Models). Used in data augmentation, stress testing and scenario simulation.",
+      example: "Conditional GAN that generates realistic commodity price trajectories for stress testing of portfolios with commodity exposure."
+    },
+    "Time Series Forecasting": {
+      description: "Predictive modeling of financial time series using ARIMA, GARCH, recurrent neural networks and transformers. Considers seasonality, trends and external shocks.",
+      example: "Transformer model for predicting stock returns using historical data and financial news embeddings, with cross-modal attention to relevant economic events."
+    },
+    "Anomaly Detection": {
+      description: "Algorithms to identify atypical behaviors in financial data flows. Combines statistical methods, distance-based approaches (LOF), reconstruction methods (autoencoders) and ensemble techniques.",
+      example: "Fraud detection in bank transactions using variational autoencoder to learn normal distribution and flag significant deviations."
+    },
+    "Computer Vision": {
+      description: "Application of computer vision techniques for analyzing visual data in finance, such as price charts, scanned documents or biometric identification.",
+      example: "Analysis of candlestick patterns in price charts using convolutional neural networks to generate trading signals."
+    },
+    "Bayesian Networks": {
+      description: "Probabilistic graphical models representing causal and dependency relationships between financial variables. Useful for risk modeling, inference and decision-making.",
+      example: "Bayesian network for modeling probability of default in credit portfolio, considering interdependencies between economic and sectoral factors."
+    },
+    "Explainable AI": {
+      description: "Techniques for understanding and explaining decisions of complex AI models in finance. Includes SHAP, LIME and other tools for increasing trust and regulatory compliance.",
+      example: "Use of SHAP values to explain which factors (e.g., income, debt, sector) are most influential in credit rating prediction from gradient boosting model."
+    },
+    "Transformer Architectures": {
+      description: "Implementation and adaptation of Transformer architectures (like BERT, GPT) for financial tasks. Focused on text processing and time series to capture long-range dependencies.",
+      example: "Transformer model for analyzing earnings call information and extracting management sentiment, detecting subtle changes in tone and vocabulary."
+    },
+    "Fine-tuning LLMs": {
+      description: "Adaptation of pre-trained Large Language Models (LLMs) to specific financial domains. Improves accuracy in tasks like report summarization and sentiment analysis.",
+      example: "Fine-tuning a GPT model to generate executive summaries of quarterly earnings reports, adapting tone and format to financial analysis style."
+    },
+    "Financial Sentiment Analysis": {
+      description: "Sentiment analysis on financial texts (news, tweets, reports) to predict market movements or investor reactions. Construction of domain-specific lexicons and context-aware models.",
+      example: "Development of sentiment classifier for economic news that weights financial keywords and their context, correlating sentiment with market volatility."
+    },
+    "Prompt Engineering": {
+      description: "Design and optimization of prompts for effective interaction with LLMs and obtaining precise, relevant responses in financial context. Includes few-shot learning and chain-of-thought techniques.",
+      example: "Creation of structured prompt for LLM that extracts main risks identified by management from annual reports and classifies them by impact."
+    },
+    "RAG Systems": {
+      description: "Implementation of Retrieval Augmented Generation (RAG) systems for LLMs. Enables models to access and cite external information sources (databases, documents, knowledge bases).",
+      example: "Construction of RAG system for LLM that answers questions about banking regulations, extracting relevant information directly from legal and regulatory documents."
+    },
+    "Earnings Call Analysis": {
+      description: "Automated analysis of company earnings call transcripts. Extraction of key insights, tone detection, emerging themes and management guidance deviations.",
+      example: "NLP algorithm that identifies red flags in earnings call transcripts, such as frequent use of uncertainty-related words or management hesitation."
+    },
+    "Document Intelligence": {
+      description: "Processing and analysis of structured and unstructured documents (contracts, reports, PDFs) using AI. Includes OCR, entity extraction, classification and relationship extraction.",
+      example: "Document Intelligence system that automates extraction of relevant clauses and key dates from derivative contracts, streamlining due diligence process."
+    },
+    "Multimodal AI": {
+      description: "Combination of different data types (text, images, time series, audio) for more complete AI models. Application in finance for holistic market analysis.",
+      example: "Multimodal model predicting investment fund performance by analyzing quarterly report text, historical performance charts and management tone."
+    },
+    "Portfolio Optimization": {
+      description: "Techniques for building portfolios that maximize return for given risk level (or minimize risk for target return). Includes Markowitz models, optimization with constraints and advanced risk metrics.",
+      example: "Global portfolio optimization with country and sector constraints, using Conditional Value-at-Risk (CVaR) as risk metric to minimize extreme losses."
+    },
+    "Monte Carlo Methods": {
+      description: "Simulation techniques for modeling complex systems and calculating stochastic integrals in finance. Used in derivative pricing, risk valuation and scenario simulation.",
+      example: "Monte Carlo simulation to estimate Value at Risk (VaR) of complex portfolio with options and bonds, generating 100,000 price trajectories."
+    },
+    "Risk Metrics (VaR/CVaR)": {
+      description: "Calculation and analysis of risk metrics to quantify potential loss in portfolio. Includes Value-at-Risk (VaR) and Conditional Value-at-Risk (CVaR) under different distribution assumptions.",
+      example: "Parametric and non-parametric VaR calculation for hedge fund, and comparison with CVaR to understand tail risk of return distribution."
+    },
+    "Factor Models": {
+      description: "Models explaining financial asset returns as function of macroeconomic, sectoral or style factors (e.g., value, growth, size). Used for performance attribution and risk decomposition.",
+      example: "Construction of multifactor model for mutual fund performance attribution, identifying contribution of market, value and momentum factors."
+    },
+    "Stochastic Volatility": {
+      description: "Models where underlying asset volatility is not constant but a stochastic process. Improves option pricing and risk management, capturing volatility clustering and smile effects.",
+      example: "Implementation of Heston model for stock index option pricing, where index volatility follows Cox-Ingersoll-Ross (CIR) process."
+    },
+    "Fixed Income Modeling": {
+      description: "Modeling of fixed income instruments, including bonds, swaps and MBS. Includes short-rate models (Hull-White), market models (Libor Market Model) and yield curve analysis.",
+      example: "Calibration of Vasicek short-rate model to current yield curve to value corporate bond portfolio with embedded options."
+    },
+    "Credit Risk Modeling": {
+      description: "Modeling probability of default and loss given default for credits and debt portfolios. Includes structural models (Merton), intensity models (Jarrow-Turnbull) and machine learning approaches.",
+      example: "Development of machine learning model (Gradient Boosting) to predict default probability of small and medium enterprises (SMEs) based on financial and operational data."
+    },
+    "Market Microstructure": {
+      description: "Study of how trading mechanisms (order books, order types) affect price formation and market liquidity. Relevant for high-frequency trading and execution optimization.",
+      example: "Analysis of impact of large orders on order book and how it affects market depth and slippage for specific asset."
+    },
+    "Macro-Financial Models": {
+      description: "Models integrating real economy (production, inflation) with financial sector (markets, banks). Used for monetary policy analysis and financial stability assessment.",
+      example: "Construction of VAR (Vector Autoregressive) model to analyze interconnection between interest rates, inflation and stock market returns."
+    },
+    "Behavioral Economics": {
+      description: "Incorporation of psychological biases and human heuristics in economic and financial models. Helps explain market anomalies and suboptimal investor decisions.",
+      example: "Analysis of loss aversion effect on sale decisions of retail investors during high volatility periods."
+    },
+    "Game Theory": {
+      description: "Analysis of strategic decisions in situations where outcomes depend on multiple participants' actions. Applied to market competition, negotiations and mechanism design.",
+      example: "Modeling of strategic interaction between central banks and financial markets in context of monetary policy decisions."
+    },
+    "Monetary Policy": {
+      description: "Analysis and modeling of central bank decisions (interest rates, QE) and their impact on economy and financial markets.",
+      example: "Development of dynamic stochastic general equilibrium (DSGE) model to evaluate impact of monetary policy shock on inflation and output."
+    },
+    "Econometrics": {
+      description: "Application of statistical methods for analyzing economic data. Includes regression, time series models, panel models and causal inference methods for hypothesis testing.",
+      example: "Estimation of price elasticity of demand for product using sales data and price variations, controlling for seasonality and promotion effects."
+    },
+    "DSGE Modeling": {
+      description: "Dynamic Stochastic General Equilibrium models describing economy as system of optimizing agents interacting in uncertain environment. Used for macroeconomic policy analysis.",
+      example: "Construction of DSGE model with financial frictions to analyze transmission of credit shocks to real economy."
+    },
+    "Causal Inference": {
+      description: "Techniques for identifying cause-and-effect relationships in economic and financial data. Includes instrumental variables, difference-in-differences and matching methods.",
+      example: "Causal evaluation of impact of regulatory change on corporate investment behavior using difference-in-differences approach."
+    },
+    "Network Theory": {
+      description: "Analysis of structure and dynamics of networks in financial systems, such as banking interconnection networks or co-ownership networks. Useful for understanding systemic risk.",
+      example: "Analysis of robustness of banking network to failure of systemically important bank, identifying most vulnerable nodes."
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("contact-form");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const messageInput = document.getElementById("message");
+    const nameError = document.getElementById("name-error");
+    const emailError = document.getElementById("email-error");
+    const messageError = document.getElementById("message-error");
+    const submitButton = form.querySelector('.contact-submit-btn');
+    const globalPopup = document.getElementById('global-popup-message');
+
+    // Modal elements
+    const infoModal = document.getElementById("infoModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalExample = document.getElementById("modalExample");
+    const exampleLabel = document.getElementById("exampleLabel");
+    const modalUseCases = document.getElementById("modalUseCases"); 
+    const useCasesLabel = document.getElementById("useCasesLabel"); 
+    const closeModal = document.querySelector(".close-modal");
+
+    // Function to reset modal content visibility
+    function resetModalContentVisibility() {
+      exampleLabel.style.display = 'none';
+      modalExample.style.display = 'none';
+      useCasesLabel.style.display = 'none';
+      modalUseCases.style.display = 'none';
+      modalUseCases.innerHTML = '';
+    }
+
+    // Function to show a pop-up message
+    function showPopup(message, type) {
+      globalPopup.textContent = message;
+      globalPopup.className = 'popup-message show'; // Reset classes and add 'show'
+      if (type === 'success') {
+        globalPopup.classList.add('popup-success');
+      } else if (type === 'error') {
+        globalPopup.classList.add('popup-error');
+      }
+      setTimeout(() => {
+        globalPopup.classList.remove('show');
+        // Give some time for fade out before clearing
+        setTimeout(() => { globalPopup.textContent = ''; globalPopup.className = 'popup-message'; }, 500); 
+      }, 3000); // Hide after 3 seconds
+    }
+
+    // Handle skill chip clicks
+    const skillChips = document.querySelectorAll(".skill-chip");
+    skillChips.forEach(chip => {
+      chip.addEventListener("click", function () {
+        const skillName = this.dataset.skill;
+        const data = skillData[skillName];
+
+        if (data) {
+          modalTitle.textContent = skillName;
+          modalDescription.innerHTML = `<p>${data.description}</p>`;
+          
+          resetModalContentVisibility(); // Reset before showing content
+          exampleLabel.style.display = 'inline'; // Show label
+          modalExample.style.display = 'inline'; // Show span
+          modalExample.textContent = data.example;
+          
+          infoModal.style.display = "flex";
+          infoModal.focus(); // Set focus to modal for accessibility
+        }
+      });
+    });
+
+    // Handle "Value Proposition" and "Industries" card clicks
+    const infoCards = document.querySelectorAll(".card[data-title][data-use-cases]");
+    infoCards.forEach(card => {
+      card.addEventListener("click", function() {
+        const cardTitle = this.dataset.title;
+        const cardDescription = this.querySelector('p').innerHTML;
+        const cardUseCases = this.dataset.useCases;
+
+        modalTitle.textContent = cardTitle;
+        modalDescription.innerHTML = `<p>${cardDescription}</p>`;
+
+        resetModalContentVisibility(); // Reset before showing content
+        useCasesLabel.style.display = 'block'; // Show label
+        modalUseCases.style.display = 'block'; // Show ul
+
+
+        if (cardUseCases) {
+          const casesArray = cardUseCases.split('|');
+          casesArray.forEach(useCase => {
+            const li = document.createElement('li');
+            li.textContent = useCase.trim();
+            modalUseCases.appendChild(li);
+          });
+        }
+
+        infoModal.style.display = "flex";
+        infoModal.focus(); // Set focus to modal for accessibility
+      });
+    });
+
+    // Close modal logic
+    closeModal.addEventListener("click", function () {
+      infoModal.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+      if (event.target === infoModal) {
+        infoModal.style.display = "none";
+      }
+    });
+
+    // Form validation and submission
+    if (form) {
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        // Hide all error/success messages
+        nameError.style.display = "none";
+        emailError.style.display = "none";
+        messageError.style.display = "none";
+        globalPopup.classList.remove('show', 'popup-success', 'popup-error'); // Hide any active popups
+
+        let isValid = true;
+
+        // Name validation
+        if (nameInput.value.trim() === '') {
+          nameError.textContent = "Name is required.";
+          nameError.style.display = "block";
+          isValid = false;
+        }
+
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailInput.value.trim() === '') {
+          emailError.textContent = "Email address is required.";
+          emailError.style.display = "block";
+          isValid = false;
+        } else if (!emailPattern.test(emailInput.value.trim())) {
+          emailError.textContent = "Please enter a valid email address.";
+          emailError.style.display = "block";
+          isValid = false;
+        }
+
+        // Message validation
+        if (messageInput.value.trim() === '') {
+          messageError.textContent = "Message is required.";
+          messageError.style.display = "block";
+          isValid = false;
+        }
+
+        if (isValid) {
+          submitButton.textContent = "Sending...";
+          submitButton.disabled = true;
+
+          try {
+            const response = await fetch(form.action, {
+              method: 'POST',
+              body: new FormData(form),
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
+
+            if (response.ok) {
+              showPopup("Message sent successfully! Thank you for your contact.", 'success');
+              form.reset();
+              submitButton.textContent = "Send Message";
+              submitButton.disabled = false;
+            } else {
+              showPopup("Error sending message. Please try again.", 'error');
+              submitButton.textContent = "Send Message";
+              submitButton.disabled = false;
+            }
+          } catch (error) {
+            showPopup("Error sending message. Please try again.", 'error');
+            submitButton.textContent = "Send Message";
+            submitButton.disabled = false;
+          }
+        }
+      });
+    }
+  });
+</script>
+<script>
+  (() => {
+    return; // Replaced by the shared bilingual component.
+    const launcher = document.getElementById('chatLauncher');
+    const panel = document.getElementById('chatPanel');
+    const close = document.getElementById('chatClose');
+    const modeLabel = document.getElementById('chatModeLabel');
+    const messages = document.getElementById('chatMessages');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('chatInput');
+    let started = false;
+    let flow = 'menu';
+    let serverConfig = null;
+    const booking = {};
+
+    const professionals = {
+      'Strategic Finance': ['Professional 1', 'Professional 2'],
+      'Quantitative Analytics': ['Professional 1', 'Professional 3'],
+      'AI Advisory': ['Professional 2', 'Professional 4']
+    };
+
+    async function api(payload) {
+      const response = await fetch('/.netlify/functions/chatbot', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'REQUEST_FAILED');
+      return data;
+    }
+
+    function formatSlot(iso) {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Santiago', weekday: 'short', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }).format(new Date(iso));
+    }
+
+    function addMessage(text, who = 'bot') {
+      const row = document.createElement('div');
+      row.className = `chat-row ${who}`;
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble';
+      bubble.textContent = text;
+      row.appendChild(bubble);
+      messages.appendChild(row);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addOptions(items, handler, valueFor = value => value) {
+      const box = document.createElement('div');
+      box.className = 'chat-options';
+      items.forEach(label => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'chat-option';
+        button.textContent = label;
+        button.addEventListener('click', () => {
+          box.remove();
+          addMessage(label, 'user');
+          handler(valueFor(label));
+        });
+        box.appendChild(button);
+      });
+      messages.appendChild(box);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function showMenu() {
+      flow = 'menu';
+      addMessage('How can I help you today?');
+      addOptions(['Book a meeting', 'Cancel a booking', 'Ask a question'], handleMenu);
+    }
+
+    function handleMenu(choice) {
+      if (choice === 'Book a meeting') {
+        flow = 'service';
+        addMessage('Choose the type of meeting:');
+        addOptions(Object.keys(professionals), selectService);
+      } else if (choice === 'Cancel a booking') {
+        flow = 'cancel-professional';
+        addMessage('First select the professional associated with the booking:');
+        addOptions(['Professional 1', 'Professional 2', 'Professional 3', 'Professional 4'], selectCancelProfessional);
+      } else {
+        flow = 'question';
+        addMessage('Tell me what you would like to know about our financial and AI services.');
+      }
+    }
+
+    function selectService(service) {
+      booking.service = service;
+      flow = 'professional';
+      addMessage('Select a professional:');
+      addOptions(professionals[service], selectProfessional);
+    }
+
+    async function selectProfessional(professional) {
+      booking.professional = professional;
+      flow = 'slot';
+      addMessage(`Checking availability for ${professional}...`);
+      try {
+        const timeMin = new Date().toISOString();
+        const timeMax = new Date(Date.now() + 21 * 86400000).toISOString();
+        const result = await api({ action: 'availability', professional, timeMin, timeMax });
+        if (!result.slots.length) {
+          addMessage('No available times were found in the next three weeks.');
+          return showMenu();
+        }
+        const labels = result.slots.map(formatSlot);
+        const slotMap = Object.fromEntries(labels.map((label, index) => [label, result.slots[index]]));
+        addMessage(`Available times with ${professional}:`);
+        addOptions(labels, selectSlot, label => slotMap[label]);
+      } catch (error) {
+        addMessage('The calendar service is temporarily unavailable. Please try again later.');
+        showMenu();
+      }
+    }
+
+    function selectSlot(slot) {
+      booking.slot = slot;
+      flow = 'name';
+      addMessage('Please type your full name.');
+    }
+
+    function selectCancelProfessional(professional) {
+      booking.cancelProfessional = professional;
+      flow = 'cancel-code';
+      addMessage('Type the booking reference included in your confirmation message.');
+    }
+
+    async function confirmBooking(choice) {
+      if (choice !== 'Confirm booking') return showMenu();
+      addMessage('Processing the booking...');
+      try {
+        const result = await api({
+          action: 'book', service: booking.service, professional: booking.professional,
+          start: booking.slot, name: booking.name, email: booking.email, phone: booking.phone
+        });
+        addMessage(`${result.demo ? 'Demo booking created' : 'Appointment confirmed'}. Reference: ${result.reference}.`);
+        if (result.demo) addMessage('No real calendar event, email or WhatsApp message was created because the server is in demo mode.');
+      } catch (error) {
+        addMessage(error.message === 'SLOT_UNAVAILABLE' ? 'That time was just taken. Please choose another.' : 'The booking could not be completed.');
+      }
+      showMenu();
+    }
+
+    async function confirmCancellation(choice) {
+      if (choice !== 'Confirm cancellation') return showMenu();
+      addMessage('Processing the cancellation...');
+      try {
+        const result = await api({ action: 'cancel', professional: booking.cancelProfessional, reference: booking.cancelReference });
+        addMessage(`${result.demo ? 'Demo cancellation completed' : 'Appointment cancelled'}. Reference: ${result.reference}.`);
+      } catch (error) {
+        addMessage(error.message === 'BOOKING_NOT_FOUND' ? 'No booking was found with that reference.' : 'The cancellation could not be completed.');
+      }
+      showMenu();
+    }
+
+    async function handleText(value) {
+      if (flow === 'name') {
+        booking.name = value;
+        flow = 'email';
+        addMessage('Type the email address that should receive the confirmation.');
+      } else if (flow === 'email') {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return addMessage('Please enter a valid email address.');
+        booking.email = value;
+        flow = 'phone';
+        addMessage('Type the WhatsApp number in international format (for example +56912345678), or type Skip.');
+      } else if (flow === 'phone') {
+        if (value.toLowerCase() !== 'skip' && !/^\+[1-9]\d{7,14}$/.test(value.replace(/\s/g, ''))) return addMessage('Use international format beginning with +, or type Skip.');
+        booking.phone = value.toLowerCase() === 'skip' ? '' : value.replace(/\s/g, '');
+        flow = 'confirm-booking';
+        addMessage(`Please confirm: ${booking.service}, ${booking.professional}, ${formatSlot(booking.slot)}, for ${booking.name}.`);
+        addOptions(['Confirm booking', 'Start over'], confirmBooking);
+      } else if (flow === 'cancel-code') {
+        const reference = value.trim().toUpperCase();
+        if (!/^DFL-[A-F0-9]{32}$/.test(reference)) return addMessage('Enter the complete reference included in your confirmation message.');
+        booking.cancelReference = reference;
+        flow = 'confirm-cancel';
+        addMessage(`Cancelling ${reference} will remove the appointment. Do you want to continue?`);
+        addOptions(['Confirm cancellation', 'Keep appointment'], confirmCancellation);
+      } else if (flow === 'question') {
+        addMessage('Thinking...');
+        try {
+          const result = await api({ action: 'ask', question: value });
+          addMessage(result.text);
+        } catch (error) {
+          addMessage('I could not answer that question right now. Please try again later.');
+        }
+        showMenu();
+      } else {
+        addMessage('Please choose one of the available options.');
+        showMenu();
+      }
+    }
+
+    async function openChat() {
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+      launcher.setAttribute('aria-expanded', 'true');
+      if (!started) {
+        started = true;
+        try {
+          serverConfig = await api({ action: 'bootstrap' });
+          if (!serverConfig.demo) modeLabel.remove();
+          addMessage(`Hello! I am the Deep Finance Lab assistant. ${serverConfig.demo ? 'The scheduling system is currently in demo mode.' : 'I can manage appointments across four professional calendars.'}`);
+        } catch (error) {
+          addMessage('Hello! The scheduling service is temporarily unavailable, but you can still explore the assistant.');
+        }
+        showMenu();
+      }
+      input.focus();
+    }
+
+    function closeChat() {
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+      launcher.setAttribute('aria-expanded', 'false');
+      launcher.focus();
+    }
+
+    launcher.addEventListener('click', () => panel.classList.contains('open') ? closeChat() : openChat());
+    close.addEventListener('click', closeChat);
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && panel.classList.contains('open')) closeChat(); });
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const value = input.value.trim();
+      if (!value) return;
+      input.value = '';
+      addMessage(value, 'user');
+      handleText(value);
+    });
+  })();
+</script>
+<script src="chatbot-es.js" defer></script>
+</body>
+</html>
