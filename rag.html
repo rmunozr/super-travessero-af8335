@@ -159,8 +159,7 @@
     return {ok:r.ok,data:await r.json().catch(()=>({}))};
   }
   function proxy(path,options={}){
-    const sep=path.includes('?')?'&':'?';
-    return fetch('/.netlify/functions/rag-proxy?path='+encodeURIComponent(path)+sep+'client_id='+encodeURIComponent(clientId),options);
+    return fetch('/.netlify/functions/rag-proxy?path='+encodeURIComponent(path)+'&client_id='+encodeURIComponent(clientId),options);
   }
   function explain(id){
     const d=defs[id];if(!d)return;
