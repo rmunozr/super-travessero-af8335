@@ -13,3 +13,17 @@
   [headers.values]
     Cache-Control = "no-store"
     X-Content-Type-Options = "nosniff"
+
+
+[[redirects]]
+  from = "/rag"
+  to = "/rag.html"
+  status = 200
+
+[[headers]]
+  for = "/rag"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
