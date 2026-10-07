@@ -7,86 +7,94 @@
   <title>Deep Finance Lab · Mini RAG</title>
   <style>
     :root{--bg:#07111f;--panel:#0b1b31;--line:#24598f;--text:#eef8ff;--muted:#88b4d8;--primary:#0093c9;--primary2:#38bdf8}
-    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    .hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;padding:24px}
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .login{min-height:100vh;display:grid;place-items:center;padding:24px}
     .card{width:min(430px,94vw);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px}
-    .brand{font-size:12px;font-weight:800;letter-spacing:.16em}.muted{color:var(--muted)}
-    h1{font-size:28px;margin:12px 0 6px}label{display:block;font-size:11px;color:var(--muted);margin:13px 0 5px}
-    input,button{font:inherit}input{width:100%;min-height:44px;background:#071522;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 12px}
-    button{cursor:pointer}.primary{width:100%;min-height:44px;margin-top:16px;border:1px solid var(--primary2);border-radius:9px;background:var(--primary);color:white;font-weight:800}
-    .error{color:#ffabab;font-size:12px;margin-top:10px}.top{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;border-bottom:1px solid var(--line);background:#081827}
-    .logout{border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);padding:8px 14px}
-    .shell{height:calc(100vh - 56px);position:relative}.frame{width:100%;height:100%;border:0;background:#fff}
-    .offline{position:absolute;inset:0;display:grid;place-items:center;padding:24px;background:var(--bg)}
-    .offline .card{width:min(560px,94vw)}.offline code{display:block;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#071522;color:var(--muted);overflow:auto}
+    .brand{font-size:12px;font-weight:800;letter-spacing:.16em}
+    .muted{color:var(--muted)}
+    h1{font-size:28px;margin:12px 0 6px}
+    label{display:block;font-size:11px;color:var(--muted);margin:13px 0 5px}
+    input,button{font:inherit}
+    input{width:100%;min-height:44px;background:#071522;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 12px}
+    button{cursor:pointer}
+    .primary{width:100%;min-height:44px;margin-top:16px;border:1px solid var(--primary2);border-radius:9px;background:var(--primary);color:#fff;font-weight:800}
+    .error{color:#ffabab;font-size:12px;margin-top:10px;display:none}
   </style>
 </head>
 <body>
-  <section id="loginView" class="login">
-    <form id="loginForm" class="card">
-      <div class="brand">DEEP FINANCE LAB</div>
-      <h1>Mini RAG</h1>
-      <div class="muted">Acceso privado</div>
-      <label for="email">Usuario</label>
-      <input id="email" type="email" autocomplete="username" required>
-      <label for="password">Contraseña</label>
-      <input id="password" type="password" autocomplete="current-password" required>
-      <button class="primary" type="submit">ENTRAR</button>
-      <div id="loginError" class="error hidden">Usuario o contraseña incorrectos.</div>
-    </form>
-  </section>
+<section class="login">
+  <form id="loginForm" class="card">
+    <div class="brand">DEEP FINANCE LAB</div>
+    <h1>Mini RAG</h1>
+    <div class="muted">Acceso privado</div>
 
-  <section id="appView" class="hidden">
-    <header class="top">
-      <div><div class="brand">DEEP FINANCE LAB · MINI RAG</div><div class="muted" style="font-size:11px">UI servida por el runtime real</div></div>
-      <button id="logoutBtn" class="logout" type="button">SALIR</button>
-    </header>
-    <div class="shell">
-      <iframe id="ragFrame" class="frame" title="Mini RAG"></iframe>
-      <div id="offline" class="offline hidden">
-        <div class="card">
-          <div class="brand">MINI RAG</div>
-          <h1>Backend no disponible</h1>
-          <div class="muted">DFL ya no simula el pipeline. Esta ruta muestra exclusivamente la aplicación real de Mini RAG a través del gateway autenticado.</div>
-          <code>DFL_RAG_BACKEND_URL</code>
-        </div>
-      </div>
-    </div>
-  </section>
+    <label for="email">Usuario</label>
+    <input id="email" type="email" autocomplete="username" required>
+
+    <label for="password">Contraseña</label>
+    <input id="password" type="password" autocomplete="current-password" required>
+
+    <button class="primary" type="submit">ENTRAR</button>
+    <div id="error" class="error"></div>
+  </form>
+</section>
 
 <script>
 (()=>{
-  const $=s=>document.querySelector(s);
+  const form=document.getElementById('loginForm');
+  const error=document.getElementById('error');
+
   async function auth(method='GET',body){
-    const r=await fetch('/.netlify/functions/rag-auth',{method,headers:{'content-type':'application/json'},body:body?JSON.stringify(body):undefined,credentials:'same-origin'});
+    const r=await fetch('/.netlify/functions/rag-auth',{
+      method,
+      headers:{'content-type':'application/json'},
+      body:body?JSON.stringify(body):undefined,
+      credentials:'same-origin',
+      cache:'no-store'
+    });
     return {ok:r.ok,data:await r.json().catch(()=>({}))};
   }
-  async function backendReady(){
-    try{
-      const r=await fetch('/rag/app/health',{cache:'no-store',credentials:'same-origin'});
-      return r.ok;
-    }catch{return false}
-  }
+
   async function enter(){
-    $('#loginView').classList.add('hidden');
-    $('#appView').classList.remove('hidden');
-    const ok=await backendReady();
-    if(ok){
-      $('#offline').classList.add('hidden');
-      $('#ragFrame').src='/rag/app/';
-    }else{
-      $('#ragFrame').removeAttribute('src');
-      $('#offline').classList.remove('hidden');
-    }
+    const health=await fetch('/rag/app/health',{
+      credentials:'same-origin',
+      cache:'no-store'
+    });
+    if(!health.ok) throw new Error('BACKEND_UNAVAILABLE');
+
+    location.replace('/rag/app/');
   }
-  $('#loginForm').addEventListener('submit',async e=>{
-    e.preventDefault();$('#loginError').classList.add('hidden');
-    const r=await auth('POST',{email:$('#email').value,password:$('#password').value});
-    if(!r.ok){$('#loginError').classList.remove('hidden');return}
-    await enter();
+
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    error.style.display='none';
+
+    const r=await auth('POST',{
+      email:document.getElementById('email').value,
+      password:document.getElementById('password').value
+    });
+
+    if(!r.ok){
+      error.textContent='Usuario o contraseña incorrectos.';
+      error.style.display='block';
+      return;
+    }
+
+    try{
+      await enter();
+    }catch{
+      error.textContent='Backend Mini RAG no disponible.';
+      error.style.display='block';
+    }
   });
-  $('#logoutBtn').addEventListener('click',async()=>{await auth('DELETE');location.reload()});
-  (async()=>{try{const s=await auth();if(s.ok&&s.data.authenticated)await enter()}catch{}})();
+
+  (async()=>{
+    try{
+      const s=await auth();
+      if(s.ok && s.data.authenticated) await enter();
+    }catch{}
+  })();
 })();
 </script>
 </body>
