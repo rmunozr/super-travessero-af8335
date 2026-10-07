@@ -48,6 +48,8 @@ exports.handler = async event => {
 
   const backend = String(process.env.DFL_RAG_BACKEND_URL || '').trim();
   if (!backend) return fail(503, 'RAG_BACKEND_NOT_CONFIGURED');
+  const originSecret = String(process.env.DFL_RAG_ORIGIN_SECRET || '').trim();
+  if (!originSecret) return fail(503, 'RAG_ORIGIN_SECRET_NOT_CONFIGURED');
 
   const method = String(event.httpMethod || 'GET').toUpperCase();
   if (!['GET','HEAD','POST','PUT','PATCH','DELETE','OPTIONS'].includes(method)) return fail(405, 'METHOD_NOT_ALLOWED');
@@ -63,8 +65,7 @@ exports.handler = async event => {
     if (v != null) headers[key] = String(v);
   }
   headers['x-dfl-authenticated-user'] = session.email;
-  const originSecret = String(process.env.DFL_RAG_ORIGIN_SECRET || '').trim();
-  if (originSecret) headers['x-dfl-rag-origin-secret'] = originSecret;
+  headers['x-dfl-rag-origin-secret'] = originSecret;
 
   let body;
   if (!['GET','HEAD'].includes(method) && event.body != null) {
