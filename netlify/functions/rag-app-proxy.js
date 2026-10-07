@@ -30,16 +30,8 @@ function targetUrl(base, rawPath, rawQuery) {
   return url;
 }
 
-function rewriteText(text, contentType) {
-  let out = text;
-  if (/text\/html|application\/xhtml\+xml/i.test(contentType)) {
-    out = out
-      .replace(/(href|src|action)=(["'])\/(?!\/)/gi, '$1=$2/rag/app/')
-      .replace(/url\((["']?)\/(?!\/)/gi, 'url($1/rag/app/');
-  } else if (/text\/css/i.test(contentType)) {
-    out = out.replace(/url\((["']?)\/(?!\/)/gi, 'url($1/rag/app/');
-  }
-  return out;
+function rewriteText(text) {
+  return text;
 }
 
 exports.handler = async event => {
