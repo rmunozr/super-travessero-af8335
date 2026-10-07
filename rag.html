@@ -6,35 +6,24 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Deep Finance Lab · Mini RAG</title>
   <style>
-    :root{--primary:#0093c9;--primary2:#38bdf8;--bg:#07111f;--panel:#0b1b31;--panel2:#0f2945;--line:#24598f;--text:#eef8ff;--muted:#88b4d8;--off:#19324c}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    button,input{font:inherit}.hidden{display:none!important}
-    .login{min-height:100vh;display:grid;place-items:center;padding:24px}
-    .login-card{width:min(430px,94vw);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px}
-    .brand{font-weight:800;letter-spacing:.16em;font-size:12px}.muted{color:var(--muted)}
-    h1{font-size:28px;margin:12px 0 6px}.login label{display:block;font-size:11px;color:var(--muted);margin:13px 0 5px}
-    input{width:100%;min-height:44px;background:#071522;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 12px}
-    .primary{min-height:44px;border:1px solid var(--primary2);border-radius:9px;background:var(--primary);color:#fff;padding:0 16px;font-weight:800;cursor:pointer}
-    .login .primary{width:100%;margin-top:16px}.error{color:#ffabab;font-size:12px;margin-top:10px}
-    .top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line);background:#081827;position:sticky;top:0;z-index:10}
-    .top-right,.modes{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.pill{min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--muted);cursor:pointer}
-    .pill.on{background:var(--primary);border-color:var(--primary2);color:#fff}.logout{background:transparent}
-    main{max-width:1500px;margin:0 auto;padding:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px;margin-bottom:12px}
-    .card h2{font-size:13px;letter-spacing:.06em;margin:0 0 10px}.chat{min-height:130px;max-height:260px;overflow:auto;background:#06111d;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:12px}
-    .msg{padding:7px 0;border-bottom:1px solid #153858}.composer{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
-    .tree-wrap{overflow-x:auto;padding-bottom:10px}.tree{min-width:1080px}.root-row{display:flex;align-items:center;justify-content:center;gap:16px;margin:10px 0}.down{text-align:center;color:var(--line);font-size:24px;font-weight:800}
-    .branches{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start}.branch{border:1px dashed var(--line);border-radius:12px;padding:10px}.branch-title{text-align:center;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.08em;margin-bottom:8px}
-    .stack{display:flex;flex-direction:column;align-items:center;gap:8px}.node{width:190px;min-height:74px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);padding:10px;text-align:center;cursor:pointer;transition:.18s}
-    .node b{display:block;font-size:11px}.node small{display:block;font-size:9px;color:var(--muted);margin-top:4px}.node.off{opacity:.13;filter:grayscale(1);background:#081421}.node.onpath{opacity:1;border-color:var(--primary)}.node.selected{outline:2px solid var(--primary2);outline-offset:2px}.node.active{background:var(--primary);border-color:var(--primary2);box-shadow:0 0 20px rgba(0,147,201,.32)}.node.done{border-color:var(--primary2)}
-    .explain{border:1px solid var(--primary);background:#081a2c;border-radius:11px;padding:11px;margin-bottom:12px}.explain-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}.explain-head strong{font-size:13px}.explain-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-    .exbox{background:#071522;border:1px solid var(--line);border-radius:8px;padding:9px}.exbox span{display:block;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}.exbox div{font-size:11px;line-height:1.4}
-    .status{font-size:11px;color:var(--muted)}.system{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.sysbox{background:#071522;border:1px solid var(--line);border-radius:8px;padding:9px;font-size:11px}.sysbox span{display:block;font-size:9px;color:var(--muted)}
-    @media(max-width:760px){.composer{grid-template-columns:1fr}.composer .primary{width:100%}.explain-grid,.system{grid-template-columns:1fr 1fr}.top{position:static}}
+    :root{--bg:#07111f;--panel:#0b1b31;--line:#24598f;--text:#eef8ff;--muted:#88b4d8;--primary:#0093c9;--primary2:#38bdf8}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;padding:24px}
+    .card{width:min(430px,94vw);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px}
+    .brand{font-size:12px;font-weight:800;letter-spacing:.16em}.muted{color:var(--muted)}
+    h1{font-size:28px;margin:12px 0 6px}label{display:block;font-size:11px;color:var(--muted);margin:13px 0 5px}
+    input,button{font:inherit}input{width:100%;min-height:44px;background:#071522;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px 12px}
+    button{cursor:pointer}.primary{width:100%;min-height:44px;margin-top:16px;border:1px solid var(--primary2);border-radius:9px;background:var(--primary);color:white;font-weight:800}
+    .error{color:#ffabab;font-size:12px;margin-top:10px}.top{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 18px;border-bottom:1px solid var(--line);background:#081827}
+    .logout{border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);padding:8px 14px}
+    .shell{height:calc(100vh - 56px);position:relative}.frame{width:100%;height:100%;border:0;background:#fff}
+    .offline{position:absolute;inset:0;display:grid;place-items:center;padding:24px;background:var(--bg)}
+    .offline .card{width:min(560px,94vw)}.offline code{display:block;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#071522;color:var(--muted);overflow:auto}
   </style>
 </head>
 <body>
   <section id="loginView" class="login">
-    <form id="loginForm" class="login-card">
+    <form id="loginForm" class="card">
       <div class="brand">DEEP FINANCE LAB</div>
       <h1>Mini RAG</h1>
       <div class="muted">Acceso privado</div>
@@ -47,160 +36,57 @@
     </form>
   </section>
 
-  <div id="appView" class="hidden">
+  <section id="appView" class="hidden">
     <header class="top">
-      <div><div class="brand">MINI RAG / DOCUMENT INTELLIGENCE</div><div class="status">9.1.2 · Production 1 · Frozen</div></div>
-      <div class="top-right">
-        <div class="modes">
-          <button type="button" class="pill" data-mode="all">TODO</button>
-          <button type="button" class="pill on" data-mode="rag">RAG</button>
-          <button type="button" class="pill" data-mode="agent">AGENT</button>
-          <button type="button" class="pill" data-mode="llm">LLM</button>
-        </div>
-        <button id="logoutBtn" type="button" class="pill logout">SALIR</button>
-      </div>
+      <div><div class="brand">DEEP FINANCE LAB · MINI RAG</div><div class="muted" style="font-size:11px">UI servida por el runtime real</div></div>
+      <button id="logoutBtn" class="logout" type="button">SALIR</button>
     </header>
-
-    <main>
-      <section class="card">
-        <h2>CHAT · EJECUCIÓN</h2>
-        <div id="chatLog" class="chat" aria-live="polite"><div class="msg">Sistema · conectando con Mini RAG…</div></div>
-        <form id="chatForm" class="composer">
-          <input id="query" placeholder="Escribe una consulta…" autocomplete="off">
-          <button type="submit" class="primary">EJECUTAR</button>
-        </form>
-      </section>
-
-      <section id="explanation" class="explain" aria-live="polite"></section>
-
-      <section class="card">
-        <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
-          <h2 style="margin:0">ÁRBOL DE ARQUITECTURA</h2>
-          <div id="runStatus" class="status">Ruta activa: RAG</div>
+    <div class="shell">
+      <iframe id="ragFrame" class="frame" title="Mini RAG"></iframe>
+      <div id="offline" class="offline hidden">
+        <div class="card">
+          <div class="brand">MINI RAG</div>
+          <h1>Backend no disponible</h1>
+          <div class="muted">DFL ya no simula el pipeline. Esta ruta muestra exclusivamente la aplicación real de Mini RAG a través del gateway autenticado.</div>
+          <code>DFL_RAG_BACKEND_URL</code>
         </div>
-        <div class="tree-wrap">
-          <div class="tree">
-            <div class="root-row">
-              <button type="button" class="node" data-id="session"><b>SESSION / TENANCY</b><small>identity + isolation</small></button>
-              <span class="down">→</span>
-              <button type="button" class="node" data-id="intent"><b>INTENT ROUTER</b><small>typed routing</small></button>
-            </div>
-            <div class="down">↓</div>
-            <div class="branches">
-              <div class="branch"><div class="branch-title">RAG</div><div class="stack">
-                <button type="button" class="node" data-id="retrieval"><b>HYBRID RETRIEVAL</b><small>semantic + BM25</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="rrf"><b>RRF FUSION</b><small>rank fusion</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="rerank"><b>BGE RERANKER</b><small>cross-encoder</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="ground"><b>GROUNDING GATE</b><small>evidence-only</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="semantic"><b>SEMANTIC LAYER</b><small>metric registry</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="planner"><b>TYPED PLANNER</b><small>Pydantic contract</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="executor"><b>EXECUTOR</b><small>deterministic compute</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="response"><b>RESPONSE</b><small>grounded output</small></button>
-              </div></div>
-              <div class="branch"><div class="branch-title">AGENT</div><div class="stack">
-                <button type="button" class="node" data-id="agentrouter"><b>AGENT ROUTER</b><small>provider per session</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="provider"><b>AGENT PROVIDER</b><small>Hermes / OpenClaw</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="tools"><b>AGENT TOOLS</b><small>provider-owned tools</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="agentresponse"><b>RESPONSE</b><small>grounded agent output</small></button>
-              </div></div>
-              <div class="branch"><div class="branch-title">LLM BASE</div><div class="stack">
-                <button type="button" class="node" data-id="llm"><b>BASE LLM</b><small>direct generation</small></button><span class="down">↓</span>
-                <button type="button" class="node" data-id="llmresponse"><b>RESPONSE</b><small>base model output</small></button>
-              </div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>RUNTIME</h2>
-        <div id="runtimeStatus" class="system">
-          <div class="sysbox"><span>Backend</span><b id="backendState">CHECKING</b></div>
-          <div class="sysbox"><span>Mode</span><b id="modeState">RAG</b></div>
-          <div class="sysbox"><span>Reranker</span><b id="rerankerState">—</b></div>
-          <div class="sysbox"><span>Index</span><b id="indexState">—</b></div>
-        </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </div>
+  </section>
 
 <script>
 (()=>{
-  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-  let mode='rag',pollTimer=null,animTimer=null;
-  const clientId=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random()).slice(0,64);
-  const defs={
-    session:{t:'SESSION / TENANCY',f:'Aísla usuario, tenant, sesión y estado conversacional.',i:'Usuario + sesión + request.',o:'Contexto de sesión aislado.',w:'Evita contaminación entre usuarios y sesiones.'},
-    intent:{t:'INTENT ROUTER',f:'Clasifica la consulta y selecciona la ruta RAG, AGENT o LLM.',i:'Consulta + contexto.',o:'Intent tipado.',w:'Separa interpretación de ejecución.'},
-    retrieval:{t:'HYBRID RETRIEVAL',f:'Combina recuperación semántica y BM25.',i:'Consulta normalizada.',o:'Candidatos de evidencia.',w:'Mejora recall con señales complementarias.'},
-    rrf:{t:'RRF FUSION',f:'Fusiona rankings semántico y lexical.',i:'Rankings independientes.',o:'Ranking unificado.',w:'Evita mezclar scores de escalas incompatibles.'},
-    rerank:{t:'BGE RERANKER',f:'Reordena candidatos con un cross-encoder.',i:'Candidatos fusionados.',o:'Evidencia priorizada.',w:'Aumenta precisión antes del grounding.'},
-    ground:{t:'GROUNDING GATE',f:'Autoriza sólo evidencia suficiente.',i:'Evidencia rerankeada.',o:'Contexto autorizado o rechazo.',w:'Implementa ZERO EVIDENCE BY DEFAULT y FAIL CLOSED.'},
-    semantic:{t:'SEMANTIC LAYER',f:'Resuelve métricas, series, dimensiones y relaciones.',i:'Contexto + referencias.',o:'Semántica validada.',w:'Evita hardcoding y desacopla lenguaje de datos.'},
-    planner:{t:'TYPED PLANNER',f:'Convierte intención en contrato Pydantic discriminado.',i:'Intent + semántica.',o:'Plan validado.',w:'Impide operaciones fuera del contrato.'},
-    executor:{t:'EXECUTOR',f:'Ejecuta cálculos y escenarios determinísticamente.',i:'Plan tipado + datos.',o:'Resultados verificables.',w:'Mantiene autoridad numérica fuera del LLM.'},
-    response:{t:'RAG RESPONSE',f:'Compone respuesta grounded y trazable.',i:'Resultados + evidencia.',o:'Respuesta final.',w:'Preserva provenance.'},
-    agentrouter:{t:'AGENT ROUTER',f:'Selecciona el provider agentico por sesión.',i:'Task grounded.',o:'Ruta Hermes/OpenClaw.',w:'Mantiene Agent Plane desacoplado.'},
-    provider:{t:'AGENT PROVIDER',f:'Adapter hacia Hermes u OpenClaw.',i:'Task + provider config.',o:'Ejecución agentica.',w:'Permite sustituir providers sin tocar el core.'},
-    tools:{t:'AGENT TOOLS',f:'Ejecuta herramientas gobernadas por el provider.',i:'Tool calls.',o:'Observaciones.',w:'Evita duplicar runtimes de herramientas.'},
-    agentresponse:{t:'AGENT RESPONSE',f:'Entrega el resultado del agente preservando grounding.',i:'Resultado agentico + evidencia.',o:'Respuesta final.',w:'Extiende RAG sin reemplazar sus garantías.'},
-    llm:{t:'BASE LLM',f:'Generación directa sin retrieval.',i:'Consulta.',o:'Generación base.',w:'Permite operar sin RAG y comparar resultados.'},
-    llmresponse:{t:'LLM RESPONSE',f:'Entrega la salida del modelo base.',i:'Generación.',o:'Respuesta final.',w:'Hace explícita la ruta no-grounded.'}
-  };
-  const routes={
-    rag:['session','intent','retrieval','rrf','rerank','ground','semantic','planner','executor','response'],
-    agent:['session','intent','retrieval','rrf','rerank','ground','semantic','planner','executor','agentrouter','provider','tools','agentresponse'],
-    llm:['session','intent','llm','llmresponse'],
-    all:Object.keys(defs)
-  };
-
+  const $=s=>document.querySelector(s);
   async function auth(method='GET',body){
-    const r=await fetch('/.netlify/functions/rag-auth',{method,headers:{'content-type':'application/json'},body:body?JSON.stringify(body):undefined});
+    const r=await fetch('/.netlify/functions/rag-auth',{method,headers:{'content-type':'application/json'},body:body?JSON.stringify(body):undefined,credentials:'same-origin'});
     return {ok:r.ok,data:await r.json().catch(()=>({}))};
   }
-  function proxy(path,options={}){
-    return fetch('/.netlify/functions/rag-proxy?path='+encodeURIComponent(path)+'&client_id='+encodeURIComponent(clientId),options);
-  }
-  function explain(id){
-    const d=defs[id];if(!d)return;
-    $$('.node').forEach(n=>n.classList.toggle('selected',n.dataset.id===id));
-    $('#explanation').innerHTML='<div class="explain-head"><strong>'+d.t+'</strong><span class="status">EXPLICACIÓN DEL NODO SELECCIONADO</span></div><div class="explain-grid"><div class="exbox"><span>Función</span><div>'+d.f+'</div></div><div class="exbox"><span>Entrada</span><div>'+d.i+'</div></div><div class="exbox"><span>Salida</span><div>'+d.o+'</div></div><div class="exbox"><span>Por qué existe</span><div>'+d.w+'</div></div></div>';
-  }
-  function paintMode(m){
-    mode=m;$$('[data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
-    const active=routes[m];$$('.node').forEach(n=>{const on=m==='all'||active.includes(n.dataset.id);n.classList.toggle('onpath',on);n.classList.toggle('off',!on);n.classList.remove('active','done')});
-    $('#runStatus').textContent='Ruta activa: '+m.toUpperCase();$('#modeState').textContent=m.toUpperCase();explain(active[0]);
-  }
-  async function setMode(m){
-    if(m==='all'){paintMode('all');return}
-    const r=await proxy('/api/mode/'+m,{method:'POST'});if(!r.ok){append('Sistema · no se pudo cambiar modo ('+r.status+').');return}paintMode(m);
-  }
-  function append(text){const x=document.createElement('div');x.className='msg';x.textContent=text;$('#chatLog').appendChild(x);$('#chatLog').scrollTop=$('#chatLog').scrollHeight}
-  function animate(){
-    clearTimeout(animTimer);const ids=routes[mode==='all'?'rag':mode];let i=0;
-    $$('.node').forEach(n=>n.classList.remove('active','done'));
-    const step=()=>{if(i>0){const p=document.querySelector('.node[data-id="'+ids[i-1]+'"]');if(p){p.classList.remove('active');p.classList.add('done')}}if(i<ids.length){const n=document.querySelector('.node[data-id="'+ids[i]+'"]');if(n){n.classList.add('active');explain(ids[i])}i++;animTimer=setTimeout(step,650)}};step();
-  }
-  async function loadStatus(){
+  async function backendReady(){
     try{
-      const r=await proxy('/api/status');if(!r.ok)throw new Error(String(r.status));const s=await r.json();
-      $('#backendState').textContent='ONLINE';$('#rerankerState').textContent=s.health?.reranker?'READY':'NOT READY';$('#indexState').textContent=s.health?.index?'READY':'NOT READY';
-      if(['rag','agent','llm'].includes(s.mode))paintMode(s.mode);
-      append('Sistema · backend Mini RAG '+(s.version||'')+' conectado.');
-    }catch{$('#backendState').textContent='OFFLINE';append('Sistema · backend no disponible o aún no configurado.')}
+      const r=await fetch('/rag/app/health',{cache:'no-store',credentials:'same-origin'});
+      return r.ok;
+    }catch{return false}
   }
-  async function pollTurn(id){
-    clearTimeout(pollTimer);
-    const tick=async()=>{try{const r=await proxy('/api/turn/'+id);if(!r.ok)throw new Error(String(r.status));const s=await r.json();if(s.status==='completed'){append('Mini RAG · '+String(s.answer||''));clearTimeout(animTimer);$$('.node.active').forEach(n=>{n.classList.remove('active');n.classList.add('done')});return}if(s.status==='failed'){append('Error · '+String(s.error||'turn failed'));return}pollTimer=setTimeout(tick,700)}catch{append('Sistema · se perdió el estado del turno.')}};tick();
+  async function enter(){
+    $('#loginView').classList.add('hidden');
+    $('#appView').classList.remove('hidden');
+    const ok=await backendReady();
+    if(ok){
+      $('#offline').classList.add('hidden');
+      $('#ragFrame').src='/rag/app/';
+    }else{
+      $('#ragFrame').removeAttribute('src');
+      $('#offline').classList.remove('hidden');
+    }
   }
-
-  $$('.node').forEach(n=>n.addEventListener('click',()=>explain(n.dataset.id)));
-  $$('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
-  $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();$('#loginError').classList.add('hidden');const r=await auth('POST',{email:$('#email').value,password:$('#password').value});if(!r.ok){$('#loginError').classList.remove('hidden');return}$('#loginView').classList.add('hidden');$('#appView').classList.remove('hidden');await loadStatus()});
+  $('#loginForm').addEventListener('submit',async e=>{
+    e.preventDefault();$('#loginError').classList.add('hidden');
+    const r=await auth('POST',{email:$('#email').value,password:$('#password').value});
+    if(!r.ok){$('#loginError').classList.remove('hidden');return}
+    await enter();
+  });
   $('#logoutBtn').addEventListener('click',async()=>{await auth('DELETE');location.reload()});
-  $('#chatForm').addEventListener('submit',async e=>{e.preventDefault();const q=$('#query').value.trim();if(!q||mode==='all')return;append('Tú · '+q);$('#query').value='';animate();const r=await proxy('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({message:q,client_id:clientId})});if(!r.ok){append('Sistema · error al iniciar turno ('+r.status+').');return}const j=await r.json();pollTurn(j.turn_id)});
-
-  (async()=>{try{const s=await auth();if(s.ok&&s.data.authenticated){$('#loginView').classList.add('hidden');$('#appView').classList.remove('hidden');await loadStatus()}else{$('#loginView').classList.remove('hidden')}}catch{$('#loginView').classList.remove('hidden')}})();
+  (async()=>{try{const s=await auth();if(s.ok&&s.data.authenticated)await enter()}catch{}})();
 })();
 </script>
 </body>
