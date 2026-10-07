@@ -256,7 +256,7 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /9\.1\.3-v83-live-inline-r2/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r3/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.1\.3-v83-live\.js/);
   assert.match(html, /\/api\/chat/);
@@ -283,4 +283,21 @@ test('Mini RAG v83 DOM and mode-control contract', () => {
   assert.match(html, /type="button" class="pill" data-mode="llm"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
   assert.match(src, /9\.1\.3-v83-live-inline-r3/);
+});
+
+
+test('Mini RAG inline script structure remains intact', () => {
+  const fs = require('node:fs');
+  const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
+  const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
+  assert.ok(hm);
+  const html = JSON.parse(hm[1]);
+  const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  assert.equal(scripts.length, 2);
+  assert.match(scripts[0], /UI RUNTIME ERROR/);
+  assert.match(scripts[1], /__MINIRAG_UI_BOOT__='js'/);
+  assert.doesNotThrow(() => new Function(scripts[0]));
+  assert.doesNotThrow(() => new Function(scripts[1]));
+  assert.match(scripts[1], /\$\$\('\.card'\)\.find/);
+  assert.match(scripts[1], /AbortController/);
 });
