@@ -44,6 +44,8 @@ exports.handler = async event => {
     return fail(404, 'API_ONLY_GATEWAY');
   }
 
+  const upstreamPath = cleanPath === 'api/health' ? 'health' : rawPath;
+
   const backend = String(process.env.DFL_RAG_BACKEND_URL || '').trim();
   if (!backend) return fail(503, 'RAG_BACKEND_NOT_CONFIGURED');
   const originSecret = String(process.env.DFL_RAG_ORIGIN_SECRET || '').trim();
@@ -53,7 +55,7 @@ exports.handler = async event => {
   if (!['GET','HEAD','POST','PUT','PATCH','DELETE','OPTIONS'].includes(method)) return fail(405, 'METHOD_NOT_ALLOWED');
 
   let url;
-  try { url = targetUrl(backend, rawPath, event.queryStringParameters); }
+  try { url = targetUrl(backend, upstreamPath, event.queryStringParameters); }
   catch { return fail(400, 'INVALID_PATH'); }
 
   const headers = {};
