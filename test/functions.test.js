@@ -256,7 +256,7 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /9\.1\.3-v83-live-inline-r4/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.1\.3-v83-live\.js/);
   assert.match(html, /\/api\/chat/);
@@ -282,7 +282,7 @@ test('Mini RAG v83 DOM and mode-control contract', () => {
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill" data-mode="llm"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /9\.1\.3-v83-live-inline-r4/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
 });
 
 
@@ -320,7 +320,7 @@ test('Mini RAG mode buttons remain responsive during backend sync failure', () =
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill" data-mode="llm"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /9\.1\.3-v83-live-inline-r4/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
 });
 
 
@@ -334,4 +334,26 @@ test('Mini RAG API gateway recovers rewritten public path', async () => {
   assert.match(proxy, /'\/api\/'/);
   assert.match(toml, /from = "\/api\/\*"[\s\S]*to = "\/\.netlify\/functions\/rag-api-proxy"/);
   assert.doesNotMatch(toml, /rag-api-proxy\?path=:splat/);
+});
+
+
+test('Mini RAG live tree and configuration help UX contract', () => {
+  const fs = require('node:fs');
+  const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
+  const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
+  assert.ok(hm);
+  const html = JSON.parse(hm[1]);
+  const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  const js = scripts.find(s => s.includes("__MINIRAG_UI_BOOT__='js'"));
+  assert.ok(js);
+  assert.doesNotThrow(() => new Function(js));
+  assert.match(html, /\.node\.inflight/);
+  assert.match(html, /\.edge\.inflight/);
+  assert.match(html, /canvasFrame booting/);
+  assert.match(html, /\.fieldhelp::before/);
+  assert.match(js, /TURN_ACTIVE=true/);
+  assert.match(js, /path\.dataset\.from=from/);
+  assert.match(js, /function mountHelpPopovers/);
+  assert.match(js, /GRAPH_BOOTSTRAPPED/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
 });
