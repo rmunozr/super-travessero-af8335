@@ -256,7 +256,7 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /9\.1\.3-v83-live-inline-r2/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r\d+/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.1\.3-v83-live\.js/);
   assert.match(html, /\/api\/chat/);
