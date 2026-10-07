@@ -246,3 +246,15 @@ test('Mini RAG embedded browser JS compiles', () => {
   assert.match(js, /\$\$\('\[data-mode\]'\)\.forEach/);
   assert.match(js, /\$\$\('\.node'\)\.forEach/);
 });
+
+
+test('Mini RAG v83 is single-response interactive UI', () => {
+  const fs = require('node:fs');
+  const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
+  assert.match(src, /9\.1\.3-v83-live-inline/);
+  assert.match(src, /window\.__MINIRAG_UI_BOOT__='js'/);
+  assert.doesNotMatch(src, /\/rag\/app\/assets\/main\.9\.1\.3-v83-live\.js/);
+  assert.match(src, /\$\$\('\[data-mode\]'\)\.forEach/);
+  assert.match(src, /\/api\/chat/);
+  assert.match(src, /EventSource/);
+});
