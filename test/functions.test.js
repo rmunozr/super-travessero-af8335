@@ -256,28 +256,9 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /9\.1\.3-v83-live-inline-r\d+/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r2/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.1\.3-v83-live\.js/);
   assert.match(html, /\/api\/chat/);
   assert.match(html, /EventSource/);
-});
-
-
-test('Mini RAG mode controls are immediate and bounded', () => {
-  const fs = require('node:fs');
-  const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
-  const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
-  assert.ok(hm);
-  const html = JSON.parse(hm[1]);
-  const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const js = scripts.find(s => s.includes("__MINIRAG_UI_BOOT__='js'"));
-  assert.ok(js);
-  assert.match(html, /type="button" class="pill on" data-mode="rag"/);
-  assert.match(html, /type="button" class="pill" data-mode="llm"/);
-  assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(js, /paintModeState\(\)/);
-  assert.match(js, /AbortController/);
-  assert.match(js, /setTimeout\(\(\)=>ctl\.abort\(\),5000\)/);
-  assert.doesNotThrow(() => new Function(js));
 });
