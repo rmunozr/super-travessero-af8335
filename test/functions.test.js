@@ -256,7 +256,7 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /9\.1\.3-v83-live-inline-r3/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r4/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.1\.3-v83-live\.js/);
   assert.match(html, /\/api\/chat/);
@@ -282,7 +282,7 @@ test('Mini RAG v83 DOM and mode-control contract', () => {
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill" data-mode="llm"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /9\.1\.3-v83-live-inline-r3/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r4/);
 });
 
 
@@ -300,4 +300,25 @@ test('Mini RAG inline script structure remains intact', () => {
   assert.doesNotThrow(() => new Function(scripts[1]));
   assert.match(scripts[1], /\$\$\('\.card'\)\.find/);
   assert.match(scripts[1], /AbortController/);
+});
+
+
+test('Mini RAG mode buttons remain responsive during backend sync failure', () => {
+  const fs = require('node:fs');
+  const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
+  const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
+  assert.ok(hm);
+  const html = JSON.parse(hm[1]);
+  const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  const js = scripts.find(s => s.includes("__MINIRAG_UI_BOOT__='js'"));
+  assert.ok(js);
+  assert.doesNotThrow(() => new Function(js));
+  assert.match(js, /MODE_SYNC_ERROR/);
+  assert.match(js, /UI ACTIVA · BACKEND NO SINCRONIZADO/);
+  assert.match(js, /MODE_NOT_SYNCHRONIZED/);
+  assert.match(js, /activeModes\.add\(m\);\n   primaryMode=m;/);
+  assert.match(html, /type="button" class="pill on" data-mode="rag"/);
+  assert.match(html, /type="button" class="pill" data-mode="llm"/);
+  assert.match(html, /type="button" class="pill" data-mode="agent"/);
+  assert.match(src, /9\.1\.3-v83-live-inline-r4/);
 });
