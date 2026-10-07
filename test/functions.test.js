@@ -223,7 +223,7 @@ test('WhatsApp selects the Spanish confirmation template', async () => {
 test('Mini RAG v83 live UI contract', async () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
-  assert.match(src, /9\.1\.3-v83-live/);
+  assert.match(src, /9\.2\.0-v83-live/);
   assert.match(src, /ÁRBOL COMPONIBLE/);
   assert.match(src, /NO REORDER/);
   assert.match(src, /\/api\/chat/);
@@ -256,9 +256,9 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
+  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
-  assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.1\.3-v83-live\.js/);
+  assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.2\.0-v83-live\.js/);
   assert.match(html, /\/api\/chat/);
   assert.match(html, /EventSource/);
 });
@@ -280,9 +280,9 @@ test('Mini RAG v83 DOM and mode-control contract', () => {
   assert.match(js, /AbortController/);
   assert.match(js, /repaintModes\(\)/);
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
-  assert.match(html, /type="button" class="pill" data-mode="llm"/);
+  assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
+  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
 });
 
 
@@ -316,11 +316,11 @@ test('Mini RAG mode buttons remain responsive during backend sync failure', () =
   assert.match(js, /MODE_SYNC_ERROR/);
   assert.match(js, /UI ACTIVA · BACKEND NO SINCRONIZADO/);
   assert.match(js, /MODE_NOT_SYNCHRONIZED/);
-  assert.match(js, /activeModes\.add\(m\);\n   primaryMode=m;/);
+  assert.match(js, /if\(m==='llm'\)/);\n  assert.match(js, /activeModes\.add\('llm'\)/);
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
-  assert.match(html, /type="button" class="pill" data-mode="llm"/);
+  assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
+  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
 });
 
 
@@ -355,5 +355,5 @@ test('Mini RAG live tree and configuration help UX contract', () => {
   assert.match(js, /path\.dataset\.from=from/);
   assert.match(js, /function mountHelpPopovers/);
   assert.match(js, /GRAPH_BOOTSTRAPPED/);
-  assert.match(src, /9\.1\.3-v83-live-inline-r5/);
+  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
 });
