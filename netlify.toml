@@ -18,7 +18,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/rag-api-proxy?path=:splat"
+  to = "/.netlify/functions/rag-api-proxy"
   status = 200
   force = true
 
