@@ -34,12 +34,23 @@ function rewriteText(text) {
   return text;
 }
 
+function resolvePublicPath(event) {
+  const explicit = String(event.queryStringParameters?.path || '').trim();
+  if (explicit) return explicit.replace(/^\/+/, '');
+
+  const incoming = String(event.path || '').trim();
+  const marker = '/api/';
+  const idx = incoming.indexOf(marker);
+  if (idx >= 0) return incoming.slice(idx + marker.length).replace(/^\/+/, '');
+
+  return '';
+}
+
 exports.handler = async event => {
   const session = sessionFromEvent(event);
   if (!session) return fail(401, 'UNAUTHENTICATED');
 
-  const rawPath = String(event.queryStringParameters?.path || '');
-  const cleanPath = rawPath.replace(/^\/+/, '');
+  const cleanPath = resolvePublicPath(event);
   if (!cleanPath) return fail(404, 'API_ONLY_GATEWAY');
 
   // Public /api/* is stripped by Netlify. Map exactly once to the backend contract.
