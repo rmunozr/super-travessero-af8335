@@ -10,7 +10,7 @@ function out(statusCode, body, contentType, cacheControl) {
       'content-type': contentType,
       'cache-control': cacheControl,
       'x-content-type-options': 'nosniff',
-      'x-mini-rag-version': '9.1.3',
+      'x-mini-rag-version': '9.2.0',
       'x-mini-rag-ui-release': RELEASE
     },
     body
