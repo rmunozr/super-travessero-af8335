@@ -322,3 +322,16 @@ test('Mini RAG mode buttons remain responsive during backend sync failure', () =
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
   assert.match(src, /9\.1\.3-v83-live-inline-r4/);
 });
+
+
+test('Mini RAG API gateway recovers rewritten public path', async () => {
+  const fs = require('node:fs');
+  const proxy = fs.readFileSync('netlify/functions/rag-api-proxy.js', 'utf8');
+  const toml = fs.readFileSync('netlify.toml', 'utf8');
+
+  assert.match(proxy, /function resolvePublicPath\(event\)/);
+  assert.match(proxy, /event\.path/);
+  assert.match(proxy, /'\/api\/'/);
+  assert.match(toml, /from = "\/api\/\*"[\s\S]*to = "\/\.netlify\/functions\/rag-api-proxy"/);
+  assert.doesNotMatch(toml, /rag-api-proxy\?path=:splat/);
+});
