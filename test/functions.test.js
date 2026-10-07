@@ -316,7 +316,10 @@ test('Mini RAG mode buttons remain responsive during backend sync failure', () =
   assert.match(js, /MODE_SYNC_ERROR/);
   assert.match(js, /UI ACTIVA · BACKEND NO SINCRONIZADO/);
   assert.match(js, /MODE_NOT_SYNCHRONIZED/);
-  assert.match(js, /if\(m==='llm'\)/);\n  assert.match(js, /activeModes\.add\('llm'\)/);\n  assert.match(js, /add\\('llm','retrieval'\\)/);\n  assert.match(js, /add\\('llm','agentrouter'\\)/);
+  assert.match(js, /if\(m==='llm'\)/);
+  assert.match(js, /activeModes\.add\('llm'\)/);
+  assert.match(js, /add\('llm','retrieval'\)/);
+  assert.match(js, /add\('llm','agentrouter'\)/);
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
