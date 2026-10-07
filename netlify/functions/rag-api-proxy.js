@@ -40,11 +40,11 @@ exports.handler = async event => {
 
   const rawPath = String(event.queryStringParameters?.path || '');
   const cleanPath = rawPath.replace(/^\/+/, '');
-  if (!(cleanPath === 'health' || cleanPath.startsWith('api/'))) {
-    return fail(404, 'API_ONLY_GATEWAY');
-  }
+  if (!cleanPath) return fail(404, 'API_ONLY_GATEWAY');
 
-  const upstreamPath = cleanPath === 'api/health' ? 'health' : rawPath;
+  // Public /api/* is stripped by Netlify. Map exactly once to the backend contract.
+  // health is the only backend endpoint outside /api.
+  const upstreamPath = cleanPath === 'health' ? 'health' : `api/${cleanPath}`;
 
   const backend = String(process.env.DFL_RAG_BACKEND_URL || '').trim();
   if (!backend) return fail(503, 'RAG_BACKEND_NOT_CONFIGURED');
