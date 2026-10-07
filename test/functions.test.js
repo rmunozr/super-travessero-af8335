@@ -218,3 +218,18 @@ test('WhatsApp selects the Spanish confirmation template', async () => {
   assert.equal(body.template.name, 'appointment_confirmation_es');
   assert.equal(body.template.language.code, 'es');
 });
+
+
+test('Mini RAG v83 live UI contract', async () => {
+  const fs = require('node:fs');
+  const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
+  assert.match(src, /9\.1\.3-v83-live/);
+  assert.match(src, /ÁRBOL COMPONIBLE/);
+  assert.match(src, /NO REORDER/);
+  assert.match(src, /\/api\/chat/);
+  assert.match(src, /\/api\/status/);
+  assert.match(src, /EventSource/);
+  assert.doesNotMatch(src, /setTimeout\(step,650\)/);
+  assert.doesNotMatch(src, /sesión virtual/);
+  assert.doesNotMatch(src, /rag-app-proxy/);
+});
