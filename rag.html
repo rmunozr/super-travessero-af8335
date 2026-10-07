@@ -57,7 +57,7 @@
   }
 
   async function enter(){
-    const health=await fetch('/api/health',{
+    const health=await fetch('/.netlify/functions/rag-api-proxy?path=health',{
       credentials:'same-origin',
       cache:'no-store'
     });
