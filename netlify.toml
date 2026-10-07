@@ -14,6 +14,19 @@
     Cache-Control = "no-store"
     X-Content-Type-Options = "nosniff"
 
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/.netlify/functions/rag-app-proxy?path=/assets/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/rag-app-proxy?path=/api/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/rag/app"
   to = "/.netlify/functions/rag-app-proxy?path=/"
