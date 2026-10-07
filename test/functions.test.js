@@ -233,3 +233,16 @@ test('Mini RAG v83 live UI contract', async () => {
   assert.doesNotMatch(src, /sesión virtual/);
   assert.doesNotMatch(src, /rag-app-proxy/);
 });
+
+
+test('Mini RAG embedded browser JS compiles', () => {
+  const fs = require('node:fs');
+  const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
+  const m = src.match(/const JS = (".*?");\n\nfunction out/s);
+  assert.ok(m, 'embedded JS literal must exist');
+  const js = JSON.parse(m[1]);
+  assert.doesNotThrow(() => new Function(js));
+  assert.match(js, /const \$=s=>document\.querySelector\(s\), \$\$=s=>\[\.\.\.document\.querySelectorAll\(s\)\]/);
+  assert.match(js, /\$\$\('\[data-mode\]'\)\.forEach/);
+  assert.match(js, /\$\$\('\.node'\)\.forEach/);
+});
