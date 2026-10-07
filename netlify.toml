@@ -29,13 +29,13 @@
 
 [[redirects]]
   from = "/rag/app"
-  to = "/.netlify/functions/rag-app-proxy?path=/"
+  to = "/.netlify/functions/rag-ui?path=index"
   status = 200
   force = true
 
 [[redirects]]
   from = "/rag/app/*"
-  to = "/.netlify/functions/rag-app-proxy?path=/:splat"
+  to = "/.netlify/functions/rag-ui?path=:splat"
   status = 200
   force = true
 
