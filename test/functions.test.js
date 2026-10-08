@@ -224,7 +224,7 @@ test('RAG live UI contract', async () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
-  assert.match(src, /LLM ORCHESTRATOR SIEMPRE ACTIVO/);
+  assert.match(src, /LANGGRAPH ORQUESTA · LLM siempre disponible/);
   assert.match(src, /NO REORDER/);
   assert.match(src, /\/api\/chat/);
   assert.match(src, /\/api\/status/);
