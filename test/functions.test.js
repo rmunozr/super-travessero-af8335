@@ -220,7 +220,7 @@ test('WhatsApp selects the Spanish confirmation template', async () => {
 });
 
 
-test('RAG v83 live UI contract', async () => {
+test('RAG live UI contract', async () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
@@ -242,7 +242,7 @@ test('RAG embedded inline browser JS compiles', () => {
   assert.ok(hm, 'embedded HTML literal must exist');
   const html = JSON.parse(hm[1]);
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const js = scripts.find(s => s.includes("__MINIRAG_UI_BOOT__='js'"));
+  const js = scripts.find(s => s.includes("__RAG_UI_BOOT__='js'"));
   assert.ok(js, 'inline application JS must exist');
   assert.doesNotThrow(() => new Function(js));
   assert.match(js, /const \$=s=>document\.querySelector\(s\), \$\$=s=>\[\.\.\.document\.querySelectorAll\(s\)\]/);
@@ -250,14 +250,14 @@ test('RAG embedded inline browser JS compiles', () => {
   assert.match(js, /\$\$\('\.node'\)\.forEach/);
 });
 
-test('RAG v83 is single-response interactive UI', () => {
+test('RAG is single-response interactive UI', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
   assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
-  assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
+  assert.match(html, /window\.__RAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\./);
   assert.match(html, /BACKEND\.version\|\|'BACKEND'/);
   assert.match(html, /\/api\/chat/);
@@ -267,14 +267,14 @@ test('RAG v83 is single-response interactive UI', () => {
 });
 
 
-test('RAG v83 DOM and mode-control contract', () => {
+test('RAG DOM and mode-control contract', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm, 'embedded HTML literal must exist');
   const html = JSON.parse(hm[1]);
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const js = scripts.find(s => s.includes("__MINIRAG_UI_BOOT__='js'"));
+  const js = scripts.find(s => s.includes("__RAG_UI_BOOT__='js'"));
   assert.ok(js, 'inline application JS must exist');
   assert.doesNotThrow(() => new Function(js));
   assert.match(js, /\$\$\('\.card'\)\.find/);
@@ -303,7 +303,7 @@ test('RAG inline script structure remains intact', () => {
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
   assert.equal(scripts.length, 2);
   assert.match(scripts[0], /UI RUNTIME ERROR/);
-  assert.match(scripts[1], /__MINIRAG_UI_BOOT__='js'/);
+  assert.match(scripts[1], /__RAG_UI_BOOT__='js'/);
   assert.doesNotThrow(() => new Function(scripts[0]));
   assert.doesNotThrow(() => new Function(scripts[1]));
   assert.match(scripts[1], /\$\$\('\.card'\)\.find/);
@@ -318,7 +318,7 @@ test('RAG mode buttons remain responsive during backend sync failure', () => {
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const js = scripts.find(s => s.includes("__MINIRAG_UI_BOOT__='js'"));
+  const js = scripts.find(s => s.includes("__RAG_UI_BOOT__='js'"));
   assert.ok(js);
   assert.doesNotThrow(() => new Function(js));
   assert.match(js, /MODE_SYNC_ERROR/);
@@ -357,7 +357,7 @@ test('RAG live tree and configuration help UX contract', () => {
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const js = scripts.find(s => s.includes("__MINIRAG_UI_BOOT__='js'"));
+  const js = scripts.find(s => s.includes("__RAG_UI_BOOT__='js'"));
   assert.ok(js);
   assert.doesNotThrow(() => new Function(js));
   assert.match(html, /\.node\.inflight/);
