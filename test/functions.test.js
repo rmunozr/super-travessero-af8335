@@ -281,6 +281,7 @@ test('RAG v83 DOM and mode-control contract', () => {
   assert.match(js, /AbortController/);
   assert.match(js, /repaintModes\(\)/);
   assert.match(html, /LANGGRAPH ROUTER/);
+  assert.match(html, /AGENT CAPABILITY/);
   assert.match(html, /AGENT ADAPTER/);
   assert.doesNotMatch(html, /AGENT ROUTER/);
   assert.doesNotMatch(html, /LLM ORCHESTRATOR/);
@@ -325,7 +326,8 @@ test('RAG mode buttons remain responsive during backend sync failure', () => {
   assert.match(js, /activeModes\.add\('llm'\)/);
   assert.match(js, /add\('session','langgraph'\)/);
   assert.match(js, /add\('langgraph','retrieval'\)/);
-  assert.match(js, /add\('langgraph','provider'\)/);
+  assert.match(js, /add\('langgraph','agent'\)/);
+  assert.match(js, /add\('agent','provider'\)/);
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
