@@ -220,10 +220,10 @@ test('WhatsApp selects the Spanish confirmation template', async () => {
 });
 
 
-test('Mini RAG v83 live UI contract', async () => {
+test('RAG v83 live UI contract', async () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
-  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
   assert.match(src, /LLM ORCHESTRATOR SIEMPRE ACTIVO/);
   assert.match(src, /NO REORDER/);
   assert.match(src, /\/api\/chat/);
@@ -235,7 +235,7 @@ test('Mini RAG v83 live UI contract', async () => {
 });
 
 
-test('Mini RAG embedded inline browser JS compiles', () => {
+test('RAG embedded inline browser JS compiles', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
@@ -250,13 +250,13 @@ test('Mini RAG embedded inline browser JS compiles', () => {
   assert.match(js, /\$\$\('\.node'\)\.forEach/);
 });
 
-test('Mini RAG v83 is single-response interactive UI', () => {
+test('RAG v83 is single-response interactive UI', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\./);
   assert.match(html, /BACKEND\.version\|\|'BACKEND'/);
@@ -265,7 +265,7 @@ test('Mini RAG v83 is single-response interactive UI', () => {
 });
 
 
-test('Mini RAG v83 DOM and mode-control contract', () => {
+test('RAG v83 DOM and mode-control contract', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
@@ -280,14 +280,18 @@ test('Mini RAG v83 DOM and mode-control contract', () => {
   assert.match(js, /\$\$\('\[data-mode\]'\)\.forEach/);
   assert.match(js, /AbortController/);
   assert.match(js, /repaintModes\(\)/);
+  assert.match(html, /LANGGRAPH ROUTER/);
+  assert.match(html, /AGENT ADAPTER/);
+  assert.doesNotMatch(html, /AGENT ROUTER/);
+  assert.doesNotMatch(html, /LLM ORCHESTRATOR/);
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
 });
 
 
-test('Mini RAG inline script structure remains intact', () => {
+test('RAG inline script structure remains intact', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
@@ -304,7 +308,7 @@ test('Mini RAG inline script structure remains intact', () => {
 });
 
 
-test('Mini RAG mode buttons remain responsive during backend sync failure', () => {
+test('RAG mode buttons remain responsive during backend sync failure', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
@@ -324,11 +328,11 @@ test('Mini RAG mode buttons remain responsive during backend sync failure', () =
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
 });
 
 
-test('Mini RAG API gateway recovers rewritten public path', async () => {
+test('RAG API gateway recovers rewritten public path', async () => {
   const fs = require('node:fs');
   const proxy = fs.readFileSync('netlify/functions/rag-api-proxy.js', 'utf8');
   const toml = fs.readFileSync('netlify.toml', 'utf8');
@@ -341,7 +345,7 @@ test('Mini RAG API gateway recovers rewritten public path', async () => {
 });
 
 
-test('Mini RAG live tree and configuration help UX contract', () => {
+test('RAG live tree and configuration help UX contract', () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
@@ -359,5 +363,5 @@ test('Mini RAG live tree and configuration help UX contract', () => {
   assert.match(js, /path\.dataset\.from=from/);
   assert.match(js, /function mountHelpPopovers/);
   assert.match(js, /GRAPH_BOOTSTRAPPED/);
-  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
 });
