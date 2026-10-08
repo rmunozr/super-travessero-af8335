@@ -323,8 +323,9 @@ test('RAG mode buttons remain responsive during backend sync failure', () => {
   assert.match(js, /MODE_NOT_SYNCHRONIZED/);
   assert.match(js, /if\(m==='llm'\)/);
   assert.match(js, /activeModes\.add\('llm'\)/);
-  assert.match(js, /add\('llm','retrieval'\)/);
-  assert.match(js, /add\('llm','agentrouter'\)/);
+  assert.match(js, /add\('session','langgraph'\)/);
+  assert.match(js, /add\('langgraph','retrieval'\)/);
+  assert.match(js, /add\('langgraph','provider'\)/);
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
