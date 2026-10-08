@@ -223,7 +223,7 @@ test('WhatsApp selects the Spanish confirmation template', async () => {
 test('Mini RAG v83 live UI contract', async () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
-  assert.match(src, /9\.2\.0-v83-live/);
+  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
   assert.match(src, /LLM ORCHESTRATOR SIEMPRE ACTIVO/);
   assert.match(src, /NO REORDER/);
   assert.match(src, /\/api\/chat/);
@@ -256,10 +256,10 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
+  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
-  assert.doesNotMatch(html, /\/rag\/app\/assets\/main\.9\.2\.0-v83-live\.js/);
-  assert.match(html, /\/api\/chat/);
+  assert.doesNotMatch(html, /\/rag\/app\/assets\/main\./);
+  assert.match(js, /BACKEND\.version\|\|'BACKEND'/);\n  assert.match(html, /\/api\/chat/);
   assert.match(html, /EventSource/);
 });
 
@@ -282,7 +282,7 @@ test('Mini RAG v83 DOM and mode-control contract', () => {
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
+  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
 });
 
 
@@ -323,7 +323,7 @@ test('Mini RAG mode buttons remain responsive during backend sync failure', () =
   assert.match(html, /type="button" class="pill on" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
   assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
+  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
 });
 
 
@@ -358,5 +358,5 @@ test('Mini RAG live tree and configuration help UX contract', () => {
   assert.match(js, /path\.dataset\.from=from/);
   assert.match(js, /function mountHelpPopovers/);
   assert.match(js, /GRAPH_BOOTSTRAPPED/);
-  assert.match(src, /9\.2\.0-v83-live-inline-r6/);
+  assert.match(src, /10\.0\.0-langgraph-ui-r1/);
 });
