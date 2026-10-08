@@ -262,6 +262,8 @@ test('RAG v83 is single-response interactive UI', () => {
   assert.match(html, /BACKEND\.version\|\|'BACKEND'/);
   assert.match(html, /\/api\/chat/);
   assert.match(html, /EventSource/);
+  assert.match(html, /\/api\/architecture/);
+  assert.match(html, /ARCHITECTURE_MISMATCH/);
 });
 
 
