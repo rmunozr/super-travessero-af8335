@@ -259,7 +259,8 @@ test('Mini RAG v83 is single-response interactive UI', () => {
   assert.match(src, /10\.0\.0-langgraph-ui-r1/);
   assert.match(html, /window\.__MINIRAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\./);
-  assert.match(js, /BACKEND\.version\|\|'BACKEND'/);\n  assert.match(html, /\/api\/chat/);
+  assert.match(html, /BACKEND\.version\|\|'BACKEND'/);
+  assert.match(html, /\/api\/chat/);
   assert.match(html, /EventSource/);
 });
 
