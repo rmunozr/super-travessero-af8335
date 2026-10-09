@@ -223,7 +223,7 @@ test('WhatsApp selects the Spanish confirmation template', async () => {
 test('RAG live UI contract', async () => {
   const fs = require('node:fs');
   const src = fs.readFileSync('netlify/functions/rag-ui.js', 'utf8');
-  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r2-agent-default/);
   assert.match(src, /LANGGRAPH ORQUESTA · LLM siempre disponible/);
   assert.match(src, /NO REORDER/);
   assert.match(src, /\/api\/chat/);
@@ -256,7 +256,7 @@ test('RAG is single-response interactive UI', () => {
   const hm = src.match(/const HTML = (".*?");\n\nfunction out/s);
   assert.ok(hm);
   const html = JSON.parse(hm[1]);
-  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r2-agent-default/);
   assert.match(html, /window\.__RAG_UI_BOOT__='js'/);
   assert.doesNotMatch(html, /\/rag\/app\/assets\/main\./);
   assert.match(html, /BACKEND\.version\|\|'BACKEND'/);
@@ -282,15 +282,17 @@ test('RAG DOM and mode-control contract', () => {
   assert.match(js, /\$\$\('\[data-mode\]'\)\.forEach/);
   assert.match(js, /AbortController/);
   assert.match(js, /repaintModes\(\)/);
+  assert.match(js, /backendMode\('agent'\)/);
+  assert.match(js, /AGENT_MODE_NOT_CONFIRMED/);
   assert.match(html, /LANGGRAPH ROUTER/);
   assert.match(html, /AGENT CAPABILITY/);
   assert.match(html, /AGENT ADAPTER/);
   assert.doesNotMatch(html, /AGENT ROUTER/);
   assert.doesNotMatch(html, /LLM ORCHESTRATOR/);
-  assert.match(html, /type="button" class="pill on" data-mode="rag"/);
+  assert.match(html, /type="button" class="pill" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
-  assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
+  assert.match(html, /type="button" class="pill on" data-mode="agent"/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r2-agent-default/);
 });
 
 
@@ -330,10 +332,10 @@ test('RAG mode buttons remain responsive during backend sync failure', () => {
   assert.match(js, /add\('langgraph','retrieval'\)/);
   assert.match(js, /add\('langgraph','agent'\)/);
   assert.match(js, /add\('agent','provider'\)/);
-  assert.match(html, /type="button" class="pill on" data-mode="rag"/);
+  assert.match(html, /type="button" class="pill" data-mode="rag"/);
   assert.match(html, /type="button" class="pill on locked" data-mode="llm" aria-disabled="true"/);
-  assert.match(html, /type="button" class="pill" data-mode="agent"/);
-  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
+  assert.match(html, /type="button" class="pill on" data-mode="agent"/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r2-agent-default/);
 });
 
 
@@ -368,5 +370,5 @@ test('RAG live tree and configuration help UX contract', () => {
   assert.match(js, /path\.dataset\.from=from/);
   assert.match(js, /function mountHelpPopovers/);
   assert.match(js, /GRAPH_BOOTSTRAPPED/);
-  assert.match(src, /10\.1\.0-langgraph-native-ui-r1/);
+  assert.match(src, /10\.1\.0-langgraph-native-ui-r2-agent-default/);
 });
