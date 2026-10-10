@@ -1,0 +1,382 @@
+
+/*
+  Deep Finance Lab — Liquid Glass Mode
+  Production-safe progressive enhancement.
+  Principles:
+  - Keep original DOM/copy/layout/behavior.
+  - Glass is a functional material layer, not a total-page blur.
+  - Stronger material on navigation/controls; lighter material on content cards.
+  - No external runtime dependency.
+  - Graceful fallback when backdrop-filter is unavailable.
+*/
+
+:root {
+  --dfl-glass-blue: 0, 147, 201;
+  --dfl-glass-ink: 11, 18, 26;
+  --dfl-glass-white: 255, 255, 255;
+  --dfl-glass-blur: 22px;
+  --dfl-glass-sat: 165%;
+  --dfl-glass-radius: 18px;
+  --dfl-glass-x: 50%;
+  --dfl-glass-y: 20%;
+}
+
+/* Background field: gives transparent surfaces real optical depth without
+   changing page structure or content. */
+html {
+  background: #eef7fb;
+}
+
+body {
+  background:
+    radial-gradient(900px 560px at 7% 7%, rgba(0,147,201,.20), transparent 62%),
+    radial-gradient(720px 520px at 94% 20%, rgba(98,205,244,.18), transparent 64%),
+    radial-gradient(820px 600px at 48% 72%, rgba(160,217,237,.12), transparent 68%),
+    linear-gradient(145deg,#fafdff 0%,#f2f8fb 42%,#fbfdfe 100%) !important;
+  background-attachment: fixed !important;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 999px;
+  filter: blur(42px);
+  opacity: .55;
+}
+
+body::before {
+  width: 360px;
+  height: 360px;
+  left: -120px;
+  top: 26vh;
+  background: rgba(0,147,201,.13);
+}
+
+body::after {
+  width: 420px;
+  height: 420px;
+  right: -170px;
+  bottom: 8vh;
+  background: rgba(107,205,237,.11);
+}
+
+.hero,
+.section {
+  background-color: transparent;
+}
+
+/* Base material. */
+.liquid-glass-surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(var(--dfl-glass-white), .66);
+  background:
+    radial-gradient(
+      circle at var(--dfl-glass-x) var(--dfl-glass-y),
+      rgba(255,255,255,.70) 0%,
+      rgba(255,255,255,.28) 16%,
+      rgba(255,255,255,0) 38%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.56),
+      rgba(227,244,250,.30)
+    );
+  box-shadow:
+    0 18px 50px rgba(13,44,61,.10),
+    0 4px 14px rgba(0,147,201,.045),
+    inset 0 1px 0 rgba(255,255,255,.92),
+    inset 0 -1px 0 rgba(0,147,201,.06);
+  -webkit-backdrop-filter:
+    blur(var(--dfl-glass-blur))
+    saturate(var(--dfl-glass-sat))
+    brightness(1.035);
+  backdrop-filter:
+    blur(var(--dfl-glass-blur))
+    saturate(var(--dfl-glass-sat))
+    brightness(1.035);
+}
+
+.liquid-glass-surface::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  inset: 1px 1px auto 1px;
+  height: 42%;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.48),
+      rgba(255,255,255,.10) 38%,
+      rgba(255,255,255,0)
+    );
+  opacity: .68;
+  mix-blend-mode: screen;
+}
+
+.liquid-glass-surface::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  width: 44%;
+  aspect-ratio: 1;
+  right: -22%;
+  bottom: -38%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(0,147,201,.18),
+      rgba(0,147,201,.06) 44%,
+      transparent 72%);
+  filter: blur(8px);
+}
+
+.liquid-glass-surface > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Navigation is the strongest functional glass layer. */
+.navbar {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10,16,23,.76),
+      rgba(10,16,23,.62)
+    ) !important;
+  border-bottom: 1px solid rgba(255,255,255,.20) !important;
+  box-shadow:
+    0 12px 34px rgba(4,15,22,.20),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -1px 0 rgba(0,147,201,.15) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(175%) !important;
+  backdrop-filter: blur(26px) saturate(175%) !important;
+}
+
+.navbar a {
+  border: 1px solid transparent;
+  transition:
+    color .25s ease,
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease !important;
+}
+
+.navbar a:hover {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.12);
+}
+
+.navbar a.active {
+  background:
+    radial-gradient(circle at 24% 10%, rgba(255,255,255,.38), transparent 38%),
+    linear-gradient(145deg, rgba(61,193,236,.53), rgba(0,147,201,.30)) !important;
+  border: 1px solid rgba(226,249,255,.44) !important;
+  box-shadow:
+    0 8px 24px rgba(0,147,201,.26),
+    inset 0 1px 0 rgba(255,255,255,.55) !important;
+}
+
+/* Cards retain exactly the existing grid and spacing. */
+.card {
+  border-radius: 18px !important;
+  border-color: rgba(255,255,255,.82) !important;
+  background:
+    radial-gradient(
+      circle at var(--dfl-glass-x) var(--dfl-glass-y),
+      rgba(255,255,255,.78) 0%,
+      rgba(255,255,255,.27) 17%,
+      transparent 39%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.60),
+      rgba(221,243,251,.29)
+    ) !important;
+  box-shadow:
+    0 20px 54px rgba(23,68,90,.11),
+    0 5px 15px rgba(0,147,201,.045),
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 -1px 0 rgba(0,147,201,.06) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(165%) !important;
+  backdrop-filter: blur(24px) saturate(165%) !important;
+}
+
+.card:hover {
+  border-color: rgba(182,233,251,.98) !important;
+  box-shadow:
+    0 28px 70px rgba(18,71,96,.15),
+    0 9px 26px rgba(0,147,201,.08),
+    inset 0 1px 0 rgba(255,255,255,1) !important;
+}
+
+/* Original gray industry section becomes a clear sheet rather than an opaque block. */
+#industrias {
+  background:
+    radial-gradient(85% 70% at 10% 0%, rgba(255,255,255,.63), transparent 64%),
+    linear-gradient(145deg, rgba(248,249,250,.50), rgba(221,242,250,.24)) !important;
+  border: 1px solid rgba(255,255,255,.74);
+  border-radius: 22px;
+  box-shadow:
+    0 18px 55px rgba(21,66,87,.065),
+    inset 0 1px 0 rgba(255,255,255,.9);
+  -webkit-backdrop-filter: blur(19px) saturate(145%);
+  backdrop-filter: blur(19px) saturate(145%);
+}
+
+/* Hero logo: same asset, now treated as a physical floating lens. */
+.hero-image {
+  border: 1px solid rgba(255,255,255,.82) !important;
+  border-radius: 20px !important;
+  background: rgba(255,255,255,.30);
+  box-shadow:
+    0 24px 64px rgba(16,52,70,.16),
+    0 4px 12px rgba(0,147,201,.05),
+    inset 0 1px 0 rgba(255,255,255,.9) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(155%);
+  backdrop-filter: blur(18px) saturate(155%);
+}
+
+/* Controls: compact, stronger glass; no layout changes. */
+.button {
+  border: 1px solid rgba(255,255,255,.30) !important;
+  background:
+    radial-gradient(circle at var(--dfl-glass-x) var(--dfl-glass-y),
+      rgba(255,255,255,.34), transparent 34%),
+    linear-gradient(145deg, rgba(24,35,45,.86), rgba(8,17,24,.75)) !important;
+  box-shadow:
+    0 12px 30px rgba(8,26,37,.17),
+    inset 0 1px 0 rgba(255,255,255,.29),
+    inset 0 -1px 0 rgba(0,0,0,.12) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
+}
+
+.button:hover {
+  border-color: rgba(232,251,255,.75) !important;
+  background:
+    radial-gradient(circle at var(--dfl-glass-x) var(--dfl-glass-y),
+      rgba(255,255,255,.46), transparent 35%),
+    linear-gradient(145deg, rgba(58,194,237,.90), rgba(0,147,201,.72)) !important;
+}
+
+.skill-chip {
+  background:
+    radial-gradient(circle at var(--dfl-glass-x) var(--dfl-glass-y),
+      rgba(255,255,255,.72), transparent 34%),
+    linear-gradient(145deg, rgba(255,255,255,.63), rgba(213,240,250,.28)) !important;
+  border: 1px solid rgba(255,255,255,.82) !important;
+  box-shadow:
+    0 8px 20px rgba(25,72,92,.075),
+    inset 0 1px 0 rgba(255,255,255,.94) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(155%);
+  backdrop-filter: blur(16px) saturate(155%);
+}
+
+.skill-chip:hover {
+  background:
+    radial-gradient(circle at var(--dfl-glass-x) var(--dfl-glass-y),
+      rgba(255,255,255,.48), transparent 34%),
+    linear-gradient(145deg, rgba(70,198,239,.80), rgba(0,147,201,.68)) !important;
+  border-color: rgba(230,251,255,.92) !important;
+  box-shadow:
+    0 12px 30px rgba(0,147,201,.16),
+    inset 0 1px 0 rgba(255,255,255,.55) !important;
+}
+
+/* Modal and form. */
+.info-modal {
+  background-color: rgba(8,18,26,.42) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(125%);
+  backdrop-filter: blur(12px) saturate(125%);
+}
+
+.modal-content {
+  border: 1px solid rgba(255,255,255,.90) !important;
+  border-top: 1px solid rgba(171,230,249,.95) !important;
+  background:
+    radial-gradient(circle at var(--dfl-glass-x) var(--dfl-glass-y),
+      rgba(255,255,255,.78), transparent 38%),
+    linear-gradient(145deg, rgba(255,255,255,.78), rgba(216,241,250,.43)) !important;
+  box-shadow:
+    0 38px 100px rgba(3,27,39,.26),
+    inset 0 1px 0 rgba(255,255,255,1) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(170%) !important;
+  backdrop-filter: blur(30px) saturate(170%) !important;
+}
+
+.modal-example {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.52), rgba(0,147,201,.07)) !important;
+  border: 1px solid rgba(0,147,201,.09);
+  border-left: 3px solid var(--primary) !important;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.72), rgba(225,244,251,.38)) !important;
+  border: 1px solid rgba(255,255,255,.88) !important;
+  box-shadow:
+    0 8px 20px rgba(23,69,90,.055),
+    inset 0 1px 0 rgba(255,255,255,.95);
+  -webkit-backdrop-filter: blur(14px) saturate(145%);
+  backdrop-filter: blur(14px) saturate(145%);
+}
+
+/* Progressive fallback. */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .liquid-glass-surface,
+  .card,
+  .button,
+  .skill-chip,
+  .modal-content,
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    background-color: rgba(245,250,252,.96) !important;
+  }
+
+  .button {
+    background-color: #111 !important;
+  }
+}
+
+/* Respect accessibility and battery/animation preferences. */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .button,
+  .skill-chip,
+  .hero-image,
+  .navbar a {
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .card,
+  .skill-chip,
+  .modal-content {
+    background: rgba(255,255,255,.90) !important;
+    border-color: rgba(0,60,85,.28) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --dfl-glass-blur: 16px;
+  }
+
+  #industrias {
+    border-radius: 16px;
+  }
+}
